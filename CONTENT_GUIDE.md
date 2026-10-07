@@ -160,6 +160,26 @@ One file per topic in `src/generators/stageN/<topic-id>.ts`. Each skill is one `
 - `nearMisses`: wrong answers close to the right one (off by sign, off by one, wrong root).
 - `isDegenerate` when trivial cases can slip through the constraints.
 
+**The file**
+
+```ts
+// src/generators/stage2/s2-fractional-exponents.ts
+export const generators = [defineGenerator(evaluate), defineGenerator(convert)];
+export const examples = { … };   // checkpoint (c): worked-example parameters
+```
+
+- Build LaTeX with the helpers in `src/engine/latex.ts` (`termTex`, `sumTex`, `ratTex`,
+  `bracketIfNegative`) so signs and coefficients follow convention (`x`, not `1x`; `- 3`, not
+  `+ -3`).
+- Compute answers with exact arithmetic (`Q` in `src/engine/rational.ts`), never floats.
+- `solveDirectly` must reach the answer by a different route from `build`: for example the
+  formula all at once where `build` goes step by step, or the unexpanded product where `build`
+  expands.
+- The last solution step must be the answer (or `= answer`) in the required form.
+- A misconception's `produce` returns `null` when the faulty rule happens to give the right
+  answer for those parameters.
+- State every required form in the prompt, using the MYP command terms.
+
 The shared test harness runs 1,000 seeds per difficulty for every generator. If a generator
 cannot pass it, fix the generator; never loosen the test.
 

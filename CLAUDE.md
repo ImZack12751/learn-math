@@ -34,8 +34,11 @@ Read both before non-trivial work.
   and `themes` are standalone. Enforced by ESLint.
 - A topic = one curriculum entry + one generator file + one MDX file. Nothing else.
 - A theme = one `src/themes/<id>.theme.ts` file. Nothing else.
-- The answer checker never trusts Compute Engine's `isEqual` alone; value equivalence uses
-  seeded numeric sampling over the stated domain, and form checks use the non-canonical tree.
+- The answer checker parses with Compute Engine's raw LaTeX parser (no evaluation), then works on
+  the engine's own tree: exact rationals for numbers, seeded sampling over the stated domain for
+  expressions, form checks on the tree exactly as written. It never uses CE's `isEqual`.
+- A generator must pass `auditGenerator` for 1,000 seeds per difficulty (`npm run verify:content`).
+  If it fails, fix the generator; never loosen the audit.
 - Deployed to GitHub Pages at base `/learn-math/`.
 - The fractal maths lives in `src/fractal/math.ts` + `shade.ts` and is mirrored in
   `shaders/fractal.frag.glsl`. Change both together and bump `RENDER_VERSION` in `stills.ts`.
@@ -61,8 +64,8 @@ Read both before non-trivial work.
 ## Status
 
 - [x] Plan: ARCHITECTURE.md, CONTENT_GUIDE.md, CLAUDE.md (approved 2026-10-07)
-- [x] (a) Design system, themes, fractal engine, landing page (awaiting review)
-- [ ] (b) Math engine, test suite, CI
+- [x] (a) Design system, themes, fractal engine, landing page (approved)
+- [x] (b) Math engine, test suite, CI (awaiting review)
 - [ ] (c) Vertical slice: `s2-fractional-exponents` (stop for approval)
 - [ ] (d) Learning system
 - [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches (Stages 4 to 9 later, same process)
