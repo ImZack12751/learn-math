@@ -395,7 +395,11 @@ record by id).
   query when available, otherwise `requestAnimationFrame` deltas), with hysteresis.
 - Frame cap: 30 fps by default, 60 fps on the landing hero when frame time allows.
 - Pauses when the tab is hidden or the canvas is off screen.
-- **Frame guard** (`src/ui/fractal/useFrameGuard.ts`): the page's own frame rate is measured on
+- **One frame in flight:** after each draw the renderer sets a GPU fence and skips frames until
+  it signals, so a slow GPU never builds a backlog. This was the root cause of a page held to
+  1–9 fps under software WebGL; with it the live fractal runs at a lower rate while the page
+  stays at 60 fps.
+- **Frame guard** (safety net, `src/ui/fractal/useFrameGuard.ts`): the page's own frame rate is measured on
   the main thread while the fractal runs. Without a capable GPU (software WebGL) the fractal can
   hold back the whole page, which the brief forbids. Below 45 fps for two seconds the renderer
   steps down (lowest resolution, then 30 and 15 fps caps on the hero); below 20 fps it stops and

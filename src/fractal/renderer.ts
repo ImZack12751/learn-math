@@ -46,6 +46,8 @@ export class FractalRenderer {
   private readonly gl: WebGL2RenderingContext;
   private readonly loc: Record<Uniform, WebGLUniformLocation | null>;
   private style: FractalStyle | null = null;
+  /** Fence after the last frame: at most one frame is ever in flight on the GPU. */
+  private fence: WebGLSync | null = null;
 
   constructor(private readonly canvas: HTMLCanvasElement | OffscreenCanvas) {
     const gl = canvas.getContext('webgl2', {
@@ -74,6 +76,19 @@ export class FractalRenderer {
 
   get lost(): boolean {
     return this.gl.isContextLost();
+  }
+
+  /**
+   * True while the GPU is still drawing the previous frame. The host skips frames until it is
+   * done, so a slow GPU (software WebGL) never builds up a backlog that holds back the page.
+   */
+  get busy(): boolean {
+    const { gl, fence } = this;
+    if (!fence) return false;
+    if (gl.getSyncParameter(fence, gl.SYNC_STATUS) !== gl.SIGNALED) return true;
+    gl.deleteSync(fence);
+    this.fence = null;
+    return false;
   }
 
   setStyle(style: FractalStyle) {
@@ -115,5 +130,7 @@ export class FractalRenderer {
     gl.uniform1f(loc.uRipple, params.ripple);
     gl.uniform1f(loc.uGrainSeed, params.grainSeed);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+    this.fence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+    gl.flush();
   }
 }

@@ -98,7 +98,7 @@ export class FractalHost {
       this.emit({ type: 'unsupported', reason: 'WebGL context lost' });
       return;
     }
-    if (this.loop.due(now)) {
+    if (this.loop.due(now) && !this.renderer.busy) {
       const params = this.loop.frame(now, (now - this.epoch) / 1000);
       const [w, h] = this.loop.resolution(this.size.width, this.size.height, this.size.dpr);
       this.renderer.draw(params, w, h);

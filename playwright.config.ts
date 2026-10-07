@@ -5,6 +5,9 @@ const port = 4173;
 export default defineConfig({
   testDir: 'tests/e2e',
   fullyParallel: true,
+  // One browser at a time in CI: the smoke tests measure the page's own frame rate, which
+  // parallel browsers on a small runner would distort.
+  ...(process.env.CI ? { workers: 1 } : {}),
   forbidOnly: Boolean(process.env.CI),
   retries: 0,
   reporter: process.env.CI ? 'github' : 'list',
