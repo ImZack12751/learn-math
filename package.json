@@ -15,11 +15,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc -p .",
-    "test": "vitest run",
+    "test": "vitest run --project unit",
     "e2e": "playwright test",
-    "ci": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build && npm run e2e"
+    "ci": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run verify:content && npm run build && npm run e2e",
+    "verify:content": "vitest run --project content"
   },
   "dependencies": {
+    "@cortex-js/compute-engine": "0.149.0",
     "@fontsource-variable/geist": "5.3.0",
     "@fontsource-variable/jetbrains-mono": "5.3.0",
     "@fontsource/instrument-serif": "5.3.0",
