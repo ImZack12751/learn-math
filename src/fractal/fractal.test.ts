@@ -130,3 +130,28 @@ describe('animation loop', () => {
     expect(last).toBe(depthToIterations(1));
   });
 });
+
+describe('degrading to protect the page frame rate', () => {
+  it('drops to the lowest resolution, then lower frame caps, then gives up', () => {
+    const loop = new FractalLoop();
+    loop.mode = 'hero';
+    expect(loop.fpsCap).toBe(60);
+    expect(loop.degrade()).toBe(true);
+    expect(loop.scale).toBe(0.5);
+    expect(loop.degrade()).toBe(true);
+    expect(loop.fpsCap).toBe(30);
+    expect(loop.degrade()).toBe(true);
+    expect(loop.fpsCap).toBe(15);
+    expect(loop.degrade()).toBe(false);
+    loop.mode = 'ambient';
+    expect(loop.fpsCap).toBe(12);
+  });
+
+  it('does not climb back above the degraded resolution', () => {
+    const loop = new FractalLoop();
+    loop.degrade();
+    let now = 0;
+    for (let i = 0; i < 600; i++) loop.recordFrame((now += 1000 / loop.fpsCap));
+    expect(loop.scale).toBe(0.5);
+  });
+});

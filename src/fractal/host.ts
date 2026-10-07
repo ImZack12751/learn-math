@@ -14,9 +14,15 @@ export type HostMessage =
   | { type: 'depth'; depth: number; immediate?: boolean }
   | { type: 'pointer'; x: number; y: number }
   | { type: 'pulse'; kind: PulseKind }
-  | { type: 'paused'; paused: boolean };
+  | { type: 'paused'; paused: boolean }
+  /** The page's frame rate is suffering: render less (or stop at once when severe). */
+  | { type: 'degrade'; severe: boolean };
 
-export type HostEvent = { type: 'unsupported'; reason: string } | { type: 'ready' };
+export type HostEvent =
+  | { type: 'unsupported'; reason: string }
+  | { type: 'ready' }
+  /** Even the lightest rendering slows the page: show the still image instead. */
+  | { type: 'overloaded' };
 
 export interface Scheduler {
   request(callback: (now: number) => void): void;
@@ -66,6 +72,12 @@ export class FractalHost {
         break;
       case 'paused':
         this.paused = message.paused;
+        break;
+      case 'degrade':
+        if (message.severe || !this.loop.degrade()) {
+          this.paused = true;
+          this.emit({ type: 'overloaded' });
+        }
         break;
     }
     this.schedule();

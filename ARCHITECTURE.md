@@ -76,14 +76,23 @@ Limitations found, and how the design handles them:
 
 - `isEqual` returns `undefined` (unknown) for polynomial identities such as
   `(x+1)(x-2)` vs `x^2-x-2`, and for `\sqrt[3]{x^2}` vs `x^{2/3}`. **The checker therefore never
-  relies on `isEqual` alone.** Value equivalence is decided by our own randomised numeric
-  sampling over compiled functions (section 7.3); exact comparison is a fast path only.
-- Canonical parsing evaluates numbers (`2^3 \cdot 3^2` becomes `72`), so canonical form must
-  never be used for form checks. Form checks run on the non-canonical tree after our own light
-  normalisation (removing `Delimiter` wrappers, folding `InvisibleOperator`).
+  relies on `isEqual`.** Value equivalence is decided by exact rational arithmetic and our own
+  seeded numeric sampling (section 7.3).
+- Even the engine's non-canonical parse evaluates some input (`3.2\times10^{4}` becomes 32000,
+  `0.\overline{3}` becomes ⅓), which would hide the form the learner wrote.
 - The library is pre-1.0 and changes quickly. It is pinned to an exact version and used only
   through `src/engine/ce-adapter.ts`. Upgrading means changing one file and re-running the full
   generator suite.
+
+**As built (checkpoint b):** the checker uses Compute Engine's standalone LaTeX parser
+(`@cortex-js/compute-engine/latex-syntax`), which returns raw MathJSON with no evaluation at all:
+`\frac{6}{8}`, `\sqrt{12}`, `2\frac{1}{3}` and `3.2\times10^{4}` (as the literal `"3.2e4"`) all
+survive exactly as written. `src/engine/ast.ts` converts that into the engine's own small tree,
+and everything after parsing is ours: exact `bigint` rationals for numbers, compiled closures for
+sampling (well under a microsecond per evaluation), polynomial arithmetic for factorised and
+expanded forms. Parsing costs about 0.04 ms, and the full audit of a generator (1,000 seeds × 3
+difficulties, every check in section 12) takes about 3 seconds. The full engine (simplification,
+calculus) remains available through the adapter for later stages.
 
 **mathjs + nerdamer**, rejected: mathjs has no LaTeX parser (MathLive output would need a
 custom LaTeX-to-mathjs translator, which is itself a correctness risk); nerdamer is a separate
@@ -267,35 +276,37 @@ interface DomainSpec {
 
 ### 5.3 Generators
 
+As built in `src/generators/types.ts`:
+
 ```ts
 interface Generator<P> {
-  id: string;                     // 's2-fractional-exponents/evaluate'
+  id: string;                     // 's2-fractional-exponents/evaluate' (topic id + '/' + skill)
   version: number;                // bump when output for a seed changes
   topicId: TopicId;
   title: string;                  // skill name shown in practice filters
-  sample(rng: Rng, d: Difficulty): P;      // constrained random parameters
-  build(p: P, d: Difficulty): Omit<ProblemInstance, 'key' | 'seed'>;   // deterministic
-  solveDirectly(p: P): string;             // INDEPENDENT computation of the answer (tests only)
-  misconceptions: MisconceptionRule<P>[];
-  equivalents(p: P): string[];             // correct rewrites the checker must accept
-  nearMisses(p: P): string[];              // plausible wrong answers it must reject
-  isDegenerate?(p: P): boolean;            // e.g. trivial or duplicate structure
-}
-
-interface MisconceptionRule<P> {
-  id: MisconceptionId;            // from content/misconceptions.ts
-  produce(p: P): string | null;   // the wrong answer this faulty rule yields (null: not applicable)
-  wrongSteps?(p: P): SolutionStep[];   // used for the "fails on purpose" worked example
+  sample(rng: Rng, d: Difficulty): P;              // constrained random parameters
+  build(p: P, d: Difficulty): BuiltProblem;        // prompt, answer spec, steps, three hints
+  solveDirectly(p: P): string;                     // INDEPENDENT computation of the answer
+  misconceptions: { id: MisconceptionId; produce(p: P): string | null }[];
+  equivalents(p: P): string[];                     // correct rewrites the checker must accept
+  nearMisses(p: P): string[];                      // plausible wrong answers it must reject
+  isDegenerate?(p: P): boolean;
 }
 ```
+
+A misconception's `produce` returns null when, for these parameters, the faulty rule happens to
+give the right answer. A topic file exports `generators` (each wrapped in `defineGenerator`);
+`src/generators/registry.ts` discovers them, so no list is edited by hand.
 
 `sample` and `build` are separate so authored worked examples can pass hand-picked
 parameters through the same `build` code (section 9.2). No worked-example number is typed by
 hand.
 
-RNG: `sfc32` seeded from a 32-bit integer; `Rng` exposes `int`, `pick`, `shuffle`,
-`nonZeroInt`, `coprimePair` and similar helpers. Generators draw only through `Rng`, so a
-seed reproduces exactly the same problem for a given generator version.
+RNG: `sfc32` seeded through splitmix32. `Rng` exposes `int`, `intExcept`, `nonZero`, `sign`,
+`bool`, `pick` and `shuffle`. Each generator and difficulty draws from its own stream, so a seed
+reproduces exactly the same problem for a given generator version. `buildSet` assembles sets
+(practice, reviews, tests) from derived seeds and skips any repeat, so a set never contains the
+same problem twice.
 
 ### 5.4 Learning records (IndexedDB)
 
@@ -384,6 +395,12 @@ record by id).
   query when available, otherwise `requestAnimationFrame` deltas), with hysteresis.
 - Frame cap: 30 fps by default, 60 fps on the landing hero when frame time allows.
 - Pauses when the tab is hidden or the canvas is off screen.
+- **Frame guard** (`src/ui/fractal/useFrameGuard.ts`): the page's own frame rate is measured on
+  the main thread while the fractal runs. Without a capable GPU (software WebGL) the fractal can
+  hold back the whole page, which the brief forbids. Below 45 fps for two seconds the renderer
+  steps down (lowest resolution, then 30 and 15 fps caps on the hero); below 20 fps it stops and
+  the still image takes over. Measured with software WebGL: the page recovers from about 9 fps
+  to 60 fps within 3 seconds. A smoke test asserts the page holds at least 40 fps.
 - **Still mode:** a pre-rendered WebP (per theme) replaces the canvas when WebGL2 is missing,
   `prefers-reduced-motion` is set, the Motion setting is "Still", or the Battery Status API
   (Chromium only) reports a low, discharging battery. There is no standard web API for the
@@ -470,24 +487,26 @@ function check(input: string, spec: AnswerSpec, rules?: MisconceptionRule[]): Ch
 
 ### 7.3 Value equivalence
 
-1. **Pure numbers**: exact comparison with our own `bigint` rational and surd arithmetic
-   where both sides are rational or simple surds; otherwise high-precision comparison through
-   Compute Engine with relative tolerance 10⁻¹².
-2. **Expressions**: fast path, Compute Engine canonical `isSame` / `isEqual === true`.
-   Otherwise compile both to JS functions and sample 32 random points inside `domain`
-   (skipping points where either side is undefined or non-real). Equivalent if at least 20
-   valid points agree within relative tolerance 10⁻⁹. Points are drawn from a seeded RNG, so
-   checks are reproducible.
+1. **Pure numbers**: exact comparison with `bigint` rationals whenever both sides are rational
+   (this covers integer and rational powers and roots that come out exact, mixed numbers and
+   recurring decimals); otherwise to 11 significant digits. Rounded answers (`accuracy`) must be
+   exactly the canonical value rounded as asked; a value that rounds to it but is written to a
+   different accuracy is the right value in the wrong form.
+2. **Expressions**: both sides compile to real-valued closures and are compared at seeded random
+   points of the stated domain until 40 points agree (at least 20 needed, at most 160 tried).
+   Points where both are undefined are skipped; where one is defined and the other is not, the
+   answers differ.
 3. **Domain restrictions**: the stated domain decides sampling. Example: with `x > 0` stated,
    `\sqrt{x^2}` and `x` are equivalent; without it they are not (sampling negative x exposes
-   the difference). Algebraic-fraction answers accept a cancelled form when the question says
-   to simplify.
-4. **Equations and solution sets**: solutions are compared as multisets of exact values,
-   order-insensitive (`x = 2, x = -3` equals `x = -3 \text{ or } x = 2`).
-5. **Inequalities**: compared as intervals (endpoint values plus open/closed ends), so
-   `-2 < x \le 3` equals `3 \ge x > -2`.
-6. **Formulae** (rearranging): the learner's answer must isolate the subject; the right-hand
-   side is compared to the canonical one as an expression with the stated domain.
+   the difference). `\frac{x^2}{x}` equals `x` because the single bad point is never sampled.
+4. **Solution sets**: compared as sets of exact values, order-insensitive, accepting
+   `x = 2, x = -3`, `x = -3 \text{ or } x = 2`, bare values, `x = 1 \pm \sqrt{2}` (± expanded,
+   also inside fractions) and `\varnothing` or "no solution".
+5. **Inequalities**: compared as unions of intervals (endpoint values plus open or closed ends),
+   so `-2 < x \le 3` equals `3 \ge x > -2`, and `x < -1 \text{ or } x > 4` is understood.
+6. **Ordered pairs**: sets of tuples, from `(1, 2), (-1, 0)` or `x = 2, y = 3`.
+7. **Formulae** (rearranging): the subject must stand alone on one side and must not appear on
+   the other; that side is compared to the canonical one as an expression.
 
 ### 7.3a Later-stage answer kinds
 
@@ -625,12 +644,20 @@ Command palette (Ctrl/Cmd + K) is global. Every route is code-split.
 
 `npm run ci` = `lint` → `typecheck` → `test` (Vitest) → `verify:content` → `build` → `e2e`.
 
-- **Generator suite** (`src/generators/**/*.test.ts`, shared harness): for every generator, for
-  each difficulty, 1,000 seeds. Asserts: `solveDirectly` equals the canonical answer; last
-  solution step equals the answer; checker accepts the canonical answer and every
-  `equivalents`; checker rejects every misconception output (and tags it correctly) and every
-  `nearMisses`; `isDegenerate` is false; no duplicate problems inside any generated set of 20.
-  Budget: under 5 minutes in CI, kept affordable by compiled sampling.
+- **Generator suite** (`src/generators/generators.test.ts`, harness in `harness.ts`): for every
+  registered generator, at each difficulty, 1,000 seeds. Asserts: the problem reproduces from its
+  seed; prompt, steps (each with a reason) and three ordered hints exist, with no caret notation
+  in text; every LaTeX string renders in KaTeX; `solveDirectly` equals the answer; the canonical
+  answer passes its own form checks; the last line of working equals the answer; every
+  equivalent rewrite is accepted; every misconception answer is rejected and recognised as that
+  misconception; every near miss is rejected; parameters are not degenerate; and 20-problem sets
+  can be built across the same span with no repeats. The harness's own tests include
+  deliberately broken generators to prove each check fires.
+- **Test projects:** `npm test` runs the `unit` project (engine, fractal, themes, learning,
+  harness); `npm run verify:content` runs the `content` project (curriculum, misconception
+  catalogue, the generator suite, and from checkpoint (c) the MDX checks of section 9.3).
+  Budget: about 3 s per generator. With about 120 generators planned for Stages 1 to 3 the
+  suite will be split per stage so Vitest runs the stages in parallel.
 - **Engine tests:** equivalence and form-check tables, including adversarial cases.
 - **Learning tests:** SM-2 transitions, mastery rules, decay, streak and light-day edge cases,
   diagnostic routing, export → import round-trip.

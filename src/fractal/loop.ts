@@ -21,6 +21,8 @@ const CORRECT_MS = 650;
 const WRONG_MS = 560;
 const MIN_SCALE = 0.5;
 const MAX_SCALE = 1;
+/** Frame caps per mode, from full quality down to the lightest level `degrade` can reach. */
+const CAPS: Record<FractalMode, readonly number[]> = { hero: [60, 30, 15], ambient: [30, 20, 12] };
 const MAX_DPR = 1.5;
 
 export class FractalLoop {
@@ -28,6 +30,10 @@ export class FractalLoop {
   mode: FractalMode = 'ambient';
   /** Internal resolution multiplier, adapted from measured frame time. */
   scale = 0.75;
+
+  /** How far `degrade` has stepped down: 0 is full quality. */
+  private capLevel = 0;
+  private maxScale = MAX_SCALE;
 
   private depthTarget = 0;
   private depth = 0;
@@ -57,7 +63,26 @@ export class FractalLoop {
   }
 
   get fpsCap(): number {
-    return this.mode === 'hero' ? 60 : 30;
+    const caps = CAPS[this.mode];
+    return caps[Math.min(this.capLevel, caps.length - 1)] ?? 30;
+  }
+
+  /**
+   * Called when the page's own frame rate suffers (the UI must stay smooth regardless): first the
+   * lowest resolution, then lower frame caps. Returns false when there is nothing left to give,
+   * and the caller should fall back to the still image.
+   */
+  degrade(): boolean {
+    if (this.maxScale > MIN_SCALE) {
+      this.maxScale = MIN_SCALE;
+      this.scale = MIN_SCALE;
+      return true;
+    }
+    if (this.capLevel < CAPS.hero.length - 1) {
+      this.capLevel++;
+      return true;
+    }
+    return false;
   }
 
   /** Whether a frame is due at `now` (ms), honouring the frame-rate cap. */
@@ -83,8 +108,8 @@ export class FractalLoop {
       }
     } else {
       this.slowFrames = Math.max(0, this.slowFrames - 1);
-      if (++this.fastFrames >= 120 && this.scale < MAX_SCALE) {
-        this.scale = Math.min(MAX_SCALE, this.scale + 0.05);
+      if (++this.fastFrames >= 120 && this.scale < this.maxScale) {
+        this.scale = Math.min(this.maxScale, this.scale + 0.05);
         this.fastFrames = 0;
       }
     }

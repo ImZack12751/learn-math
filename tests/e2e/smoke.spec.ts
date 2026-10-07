@@ -32,14 +32,31 @@ test('landing page renders the hero, progress and stages with no external reques
   expect(seen.errors).toEqual([]);
 });
 
-test('the live WebGL2 renderer starts (shaders compile) in a WebGL2 browser', async ({ page }) => {
+test('the live WebGL2 renderer starts (shaders compile) and never makes the page janky', async ({
+  page,
+}) => {
   const seen = watch(page);
   await page.goto('./');
-  // Wait past worker start-up: a shader or context failure would switch the host to 'still'.
-  await page.waitForTimeout(1500);
   const host = page.locator('[data-fractal]');
-  await expect(host).toHaveAttribute('data-fractal', 'live');
-  await expect(host.locator('canvas')).toBeAttached();
+  // A shader or context failure would switch to the still before ever starting.
+  await expect(host).toHaveAttribute('data-renderer-started', 'true');
+  // Software-only WebGL (as in CI) may be too slow: then the frame guard must have switched to
+  // the still image, and either way the page keeps its own frame rate.
+  await page.waitForTimeout(4000);
+  const fps = await page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        let frames = 0;
+        const start = performance.now();
+        const tick = () => {
+          frames++;
+          if (performance.now() - start < 1000) requestAnimationFrame(tick);
+          else resolve(frames);
+        };
+        requestAnimationFrame(tick);
+      }),
+  );
+  expect(fps).toBeGreaterThanOrEqual(40);
   expect(seen.errors).toEqual([]);
 });
 

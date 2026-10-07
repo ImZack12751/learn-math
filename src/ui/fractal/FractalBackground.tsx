@@ -6,6 +6,7 @@ import { getTheme } from '../../themes/registry';
 import { asset } from '../asset';
 import { useReducedMotion } from '../theme/useMotion';
 import { useFractal } from './FractalProvider';
+import { useFrameGuard } from './useFrameGuard';
 import { useLowBattery } from './useLowBattery';
 
 /**
@@ -19,9 +20,12 @@ export function FractalBackground() {
   const kind = useSettings((s) => s.fractalKind);
   const reduced = useReducedMotion();
   const lowBattery = useLowBattery();
-  const [unsupported, setUnsupported] = useState(false);
+  /** Set when WebGL2 is unavailable or the live renderer would slow the page. */
+  const [fallback, setFallback] = useState(false);
+  /** The renderer compiled its shaders and drew (stays true after any later fallback). */
+  const [started, setStarted] = useState(false);
   const host = useRef<HTMLDivElement>(null);
-  const wantLive = !reduced && !lowBattery && !unsupported;
+  const wantLive = !reduced && !lowBattery && !fallback;
   const theme = getTheme(themeId);
 
   // Latest values for the controller's initial messages, without re-creating it on every change.
@@ -39,8 +43,11 @@ export function FractalBackground() {
     canvas.className = 'absolute inset-0 h-full w-full';
     container.prepend(canvas);
     const controller = createFractalController(canvas, (event) => {
-      if (event.type === 'unsupported') setUnsupported(true);
-      if (event.type === 'ready') setLive(true);
+      if (event.type === 'unsupported' || event.type === 'overloaded') setFallback(true);
+      if (event.type === 'ready') {
+        setLive(true);
+        setStarted(true);
+      }
     });
     controllerRef.current = controller;
     const { theme: t, kind: k, mode: m, depth: d } = latest.current;
@@ -87,6 +94,11 @@ export function FractalBackground() {
     controllerRef.current?.send({ type: 'depth', depth });
   }, [depth, controllerRef]);
 
+  // Keep the page itself smooth: if the fractal holds it back, render less, then stop.
+  useFrameGuard(wantLive && started, (severe) => {
+    controllerRef.current?.send({ type: 'degrade', severe });
+  });
+
   // Pointer parallax and the gentle nudge of c, on the landing hero only.
   useEffect(() => {
     if (!wantLive || mode !== 'hero') return;
@@ -118,6 +130,7 @@ export function FractalBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-bg"
       data-fractal={wantLive ? 'live' : 'still'}
+      data-renderer-started={started}
     >
       {!wantLive && (
         <img
