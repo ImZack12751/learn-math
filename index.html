@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Iterate: relearn school mathematics from first principles, from arithmetic to calculus. Works offline."
+    />
+    <meta name="theme-color" content="#050506" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Iterate</title>
+    <script>
+      // Paint the saved theme's background before any CSS or JS loads, so there is no flash.
+      try {
+        var boot = JSON.parse(localStorage.getItem('iterate:boot') || 'null');
+        if (boot) {
+          document.documentElement.style.background = boot.bg;
+          document.documentElement.style.colorScheme = boot.scheme;
+        }
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>
