@@ -1,0 +1,56 @@
+# CLAUDE.md: Iterate
+
+Iterate is a premium, local-first web app for relearning school mathematics (arithmetic to
+intermediate algebra). Full design: `ARCHITECTURE.md`. Writing rules: `CONTENT_GUIDE.md`.
+Read both before non-trivial work.
+
+## Non-negotiables
+
+- **Mathematical correctness.** Every worked example, solution, hint and numeric claim is
+  produced or verified by code. No hand-typed, unverified numbers. Solutions come from
+  deterministic code or authored data, never from a language model at runtime.
+- **Offline and self-contained.** No runtime network calls, CDNs, external fonts, videos or APIs.
+  Everything is bundled. Works installed as a PWA with no connection.
+- **No caret notation in the UI.** All maths is typeset with KaTeX (display) or MathLive (input).
+  The plain-text input fallback shows a live typeset preview.
+- **Monochrome only.** Black, white and greys. No hue-based accents. Emphasis through luminance,
+  glow, sheen. All values come from the active theme file.
+- **Colour is never the only signal.** Correct and wrong always also use an icon and text.
+- **Respect reduced motion** everywhere (fractal becomes a still, no parallax).
+- **WCAG 2.2 AA** in every theme; full keyboard use; screen-reader labels for maths and controls.
+- **Pedagogy:** first principles, skip no steps, define every term at first use, never refer to
+  anything not yet taught, explain what / why / where people go wrong.
+- **Conventions:** IB MYP terminology, British spelling (see CONTENT_GUIDE section 2).
+
+## Architecture rules
+
+- Stack: Vite, React 19, TypeScript strict (pinned 6.0.x), React Router, Tailwind 4 with CSS
+  variable tokens, `motion`, MDX, KaTeX, MathLive, Compute Engine (via `src/engine/ce-adapter.ts`
+  only), Zustand, Dexie, vite-plugin-pwa, Vitest, Playwright.
+- Module boundaries: `engine`, `generators`, `learning` are pure (no React, DOM, Dexie). `fractal`
+  and `themes` are standalone. Enforced by ESLint.
+- A topic = one curriculum entry + one generator file + one MDX file. Nothing else.
+- A theme = one `src/themes/<id>.theme.ts` file. Nothing else.
+- The answer checker never trusts Compute Engine's `isEqual` alone; value equivalence uses
+  seeded numeric sampling over the stated domain, and form checks use the non-canonical tree.
+- Deployed to GitHub Pages at base `/learn-math/`.
+
+## Workflow
+
+- Build in checkpoints (a) to (f) from the brief; **stop for the owner's review at each
+  checkpoint**. Report what was built, which tests pass, what is uncertain, what is next.
+- Ask before any significant decision not covered by the docs.
+- `npm run ci` must pass before every push: lint, typecheck, Vitest (including 1,000 seeds per
+  difficulty per generator), `verify:content`, build, Playwright smoke.
+- Never loosen a test to make it pass; fix the generator or the code.
+- No dead code. Prettier formatting. Small focused commits.
+
+## Status
+
+- [x] Plan: ARCHITECTURE.md, CONTENT_GUIDE.md, CLAUDE.md (awaiting review)
+- [ ] (a) Design system, themes, fractal engine, landing page
+- [ ] (b) Math engine, test suite, CI
+- [ ] (c) Vertical slice: `s2-fractional-exponents` (stop for approval)
+- [ ] (d) Learning system
+- [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches
+- [ ] (f) Polish, accessibility, performance, PWA
