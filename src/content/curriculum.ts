@@ -440,11 +440,23 @@ export const stages: readonly StageEntry[] = [
   {
     id: 4,
     title: 'Functions and graphs',
-    tagline: 'Lines, functions, transformations and the graphs that model the world.',
+    tagline:
+      'Geometry essentials, then lines, functions, transformations and the graphs that model the world.',
     prerequisiteStages: [3],
     optional: false,
     topics: [
-      t('s4-pythagoras', "Pythagoras' theorem", ['s2-surds', 's2-rearranging-2']),
+      // Geometry essentials: trigonometry (Stage 5) and volumes of revolution (Stage 8) rely on them.
+      t('s4-angles-triangles', 'Angles, triangles and polygons', ['s2-one-two-step-equations']),
+      t('s4-area-volume', 'Perimeter, area, circles and volume', [
+        's2-substitution',
+        's1-decimals',
+      ]),
+      t('s4-pythagoras', "Pythagoras' theorem", [
+        's4-angles-triangles',
+        's4-area-volume',
+        's2-surds',
+        's2-rearranging-2',
+      ]),
       t('s4-coordinates', 'Coordinates: gradient, midpoint and distance', [
         's4-pythagoras',
         's2-substitution',
@@ -685,7 +697,10 @@ export const stages: readonly StageEntry[] = [
         's7-limits-at-infinity',
       ]),
       t('s8-area-between-curves', 'Areas between curves', ['s8-fundamental-theorem']),
-      t('s8-volumes', 'Volumes: discs, washers and shells', ['s8-area-between-curves']),
+      t('s8-volumes', 'Volumes: discs, washers and shells', [
+        's8-area-between-curves',
+        's4-area-volume',
+      ]),
       t('s8-arc-length', 'Arc length and surface area', ['s8-volumes', 's8-trig-integrals']),
       t('s8-kinematics', 'Kinematics and applications', ['s8-fundamental-theorem']),
       t('s8-separable-odes', 'Separable differential equations and slope fields', [
