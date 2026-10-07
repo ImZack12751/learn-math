@@ -1,0 +1,43 @@
+import { defineTheme } from './types';
+
+export default defineTheme({
+  id: 'obsidian',
+  name: 'Obsidian',
+  description: 'Near-black, bright silver fractal, soft pearl text.',
+  scheme: 'dark',
+  colors: {
+    bg: '#050506',
+    fg: '#ecebe7',
+    fgMuted: '#bdbcb8',
+    fgFaint: '#a9a8a4',
+    line: '#2a2a2e',
+    lineStrong: '#8a8a90',
+    focus: '#f4f4f2',
+    panel: '#0a0a0c',
+    panelHighlight: '#ffffff1f',
+    accent: '#e4e4e2',
+    accentFg: '#0a0a0c',
+  },
+  panel: { opacity: 0.8, blur: 28, glow: 0.5 },
+  scrim: 0.72,
+  fractal: {
+    ramp: [
+      [0, 0.015],
+      [0.32, 0.05],
+      [0.55, 0.2],
+      [0.75, 0.55],
+      [0.9, 0.82],
+      [1, 0.92],
+    ],
+    interior: 0.02,
+    interiorDetail: 0.14,
+    glow: 0.35,
+    grain: 0.035,
+    vignette: 0.75,
+    halo: 0.05,
+    ink: '#030304',
+    paper: '#f3f3f1',
+  },
+  thumbnailFilter: 'none',
+  motion: { ease: [0.22, 1, 0.36, 1], durationScale: 1 },
+});

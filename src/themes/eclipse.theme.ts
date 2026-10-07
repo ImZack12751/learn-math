@@ -1,0 +1,43 @@
+import { defineTheme } from './types';
+
+export default defineTheme({
+  id: 'eclipse',
+  name: 'Eclipse',
+  description: 'Mid-tone graphite, lowest contrast, gentlest for long sessions.',
+  scheme: 'dark',
+  colors: {
+    bg: '#232427',
+    fg: '#dddcd8',
+    fgMuted: '#c2c1bd',
+    fgFaint: '#b4b3af',
+    line: '#3a3b3f',
+    lineStrong: '#85868b',
+    focus: '#e6e5e1',
+    panel: '#1e1f22',
+    panelHighlight: '#ffffff14',
+    accent: '#cfcecb',
+    accentFg: '#1e1f22',
+  },
+  panel: { opacity: 0.82, blur: 28, glow: 0.3 },
+  scrim: 0.75,
+  fractal: {
+    ramp: [
+      [0, 0.12],
+      [0.32, 0.14],
+      [0.55, 0.22],
+      [0.75, 0.36],
+      [0.9, 0.48],
+      [1, 0.54],
+    ],
+    interior: 0.11,
+    interiorDetail: 0.14,
+    glow: 0.25,
+    grain: 0.02,
+    vignette: 0.55,
+    halo: 0.03,
+    ink: '#101113',
+    paper: '#e2e1de',
+  },
+  thumbnailFilter: 'contrast(0.78) brightness(0.92)',
+  motion: { ease: [0.25, 0.8, 0.3, 1], durationScale: 1.25 },
+});

@@ -1,0 +1,43 @@
+import { defineTheme } from './types';
+
+export default defineTheme({
+  id: 'pearl',
+  name: 'Pearl',
+  description: 'Light mode: dark filaments on warm off-white, charcoal text.',
+  scheme: 'light',
+  colors: {
+    bg: '#f3f0e9',
+    fg: '#1e1d1b',
+    fgMuted: '#45433f',
+    fgFaint: '#55534e',
+    line: '#dad6ce',
+    lineStrong: '#6b6862',
+    focus: '#1a1918',
+    panel: '#faf8f3',
+    panelHighlight: '#ffffffb3',
+    accent: '#24231f',
+    accentFg: '#f6f4ee',
+  },
+  panel: { opacity: 0.8, blur: 28, glow: 0.35 },
+  scrim: 0.72,
+  fractal: {
+    ramp: [
+      [0, 0.985],
+      [0.32, 0.95],
+      [0.55, 0.8],
+      [0.75, 0.48],
+      [0.9, 0.22],
+      [1, 0.12],
+    ],
+    interior: 0.97,
+    interiorDetail: 0.12,
+    glow: 0.3,
+    grain: 0.025,
+    vignette: 0.6,
+    halo: 0.03,
+    ink: '#191816',
+    paper: '#f6f3ec',
+  },
+  thumbnailFilter: 'invert(1) sepia(0.12) brightness(1.02)',
+  motion: { ease: [0.22, 1, 0.36, 1], durationScale: 1 },
+});
