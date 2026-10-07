@@ -8,7 +8,25 @@ export default defineConfig({
   worker: { format: 'es' },
   build: { target: 'es2022', assetsInlineLimit: 0 },
   test: {
-    include: ['src/**/*.test.ts'],
     environment: 'node',
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['src/**/*.test.ts'],
+          exclude: ['src/content/**', 'src/generators/generators.test.ts'],
+        },
+      },
+      {
+        // Content correctness: curriculum, catalogue and the 1,000-seed generator suite.
+        extends: true,
+        test: {
+          name: 'content',
+          include: ['src/content/**/*.test.ts', 'src/generators/generators.test.ts'],
+          testTimeout: 600_000,
+        },
+      },
+    ],
   },
 });
