@@ -1,7 +1,10 @@
 # Iterate: Architecture
 
-Status: **proposal for review** (pre-checkpoint (a)). Nothing here is built yet.
-Decisions marked **[confirm]** need the owner's sign-off before the matching checkpoint.
+Status: **approved 2026-10-07**, including every item that was marked [confirm].
+
+Scope: nine stages, from arithmetic to single-variable calculus (AP Calculus BC / IB Maths AA HL)
+and an optional advanced stage. Stages 1 to 3 are built first. The data model, stage map,
+diagnostic and math engine are designed for all nine from the start.
 
 ---
 
@@ -16,7 +19,9 @@ Decisions marked **[confirm]** need the owner's sign-off before the matching che
    DOM, so it is fast to test and impossible to couple to the UI by accident.
 4. **Content is data.** Adding a topic means adding one MDX file, one generator file and one
    curriculum entry, and nothing else.
-5. **One visual language.** Monochrome only. Every colour, ramp, blur and easing curve comes
+5. **Designed for nine stages.** Nothing in the data model, stage map, diagnostic or engine
+   assumes the curriculum stops at Stage 3. Later stages are added as data and content only.
+6. **One visual language.** Monochrome only. Every colour, ramp, blur and easing curve comes
    from the active theme file.
 
 ---
@@ -121,7 +126,10 @@ mathjs's `simplify` also normalises structure, which hides the learner's form.
 │  │                             fingerprint.ts (shared with the thumbnail script)
 │  ├─ themes/                    *.theme.ts (one file per theme), types, registry, applier
 │  ├─ ui/
-│  │  ├─ primitives/             Button, Panel, Dialog, Tabs, Slider, Meter, HoverCard, …
+│  │  ├─ primitives/             Button, Panel, Eyebrow, Icon, Meter, ProgressArc, CountUp, …
+│  │  ├─ theme/                  Theme applier, ThemeSync, reduced-motion hook
+│  │  ├─ fractal/                FractalProvider, FractalBackground, Thumbnail
+│  │  ├─ layout/                 AppShell, DisplayMenu
 │  │  ├─ math/                   <Tex>, <MathInput> (MathLive + plain text), answer preview
 │  │  ├─ mdx/                    Callout, WorkedExample, Practice, Visual, Misconception,
 │  │  │                          Takeaways, Prereq, Term, Claim, Interactive
@@ -165,22 +173,43 @@ TypeScript sketches. Field names are final unless review changes them.
 ### 5.1 Curriculum
 
 ```ts
-type StageId = 1 | 2 | 3;
+type StageId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type TopicId = string;            // kebab case, stage-prefixed: 's2-fractional-exponents'
 
-interface Topic {
+interface TopicEntry {            // what curriculum.ts records
   id: TopicId;
-  stage: StageId;
-  order: number;                  // position within the stage; prerequisites always come first
   title: string;
-  summary: string;                // one line, for cards and the palette
+  summary?: string;               // one line, for cards and the palette; required once built
   prerequisites: TopicId[];       // direct edges of the prerequisite graph
-  estimatedMinutes: number;
-  generatorIds: string[];         // skills practised in this topic
-  sections: string[];             // anchor ids inside the MDX, for misconception links
+  minutes?: number;               // estimated time; required once built
 }
 
-interface Stage { id: StageId; title: string; topicIds: TopicId[]; }
+interface Topic extends TopicEntry {
+  stage: StageId;                 // derived from the stage it is listed under
+  order: number;                  // derived from its position; prerequisites always come first
+}
+
+interface StageEntry {
+  id: StageId;
+  title: string;
+  tagline: string;
+  prerequisiteStages: StageId[];  // Stage 7 requires 4 and 5; Stage 6 only requires 5
+  optional: boolean;              // Stage 9
+  topics: TopicEntry[];           // in study order
+}
+```
+
+The whole nine-stage curriculum is recorded in `curriculum.ts` from day one: every topic of
+Stages 4 to 9 exists as an entry with its title and provisional prerequisites. This
+gives the stage map, the depth readout and the diagnostic their full shape now. Stage-level
+prerequisites are a partial order, not a line: Stage 6 can be studied in any order with Stages
+7, but Stage 8 needs Stage 6 (Riemann sums use sigma notation, series build on geometric
+series, parametric calculus builds on parametric curves). A topic is *available* when its MDX
+lesson exists; that is derived from the content files, not stored. When a later stage is
+built, its prerequisites are reviewed. Generator ids and section anchors are found
+through the generator registry and the MDX, not repeated in the entry.
+
+```ts
 ```
 
 ### 5.2 Problems
@@ -207,7 +236,12 @@ interface Hint { level: 'nudge' | 'method' | 'first-step'; body: RichText; }
 
 interface AnswerSpec {
   kind: 'number' | 'expression' | 'equation' | 'solution-set' | 'inequality'
-      | 'ordered-pairs' | 'formula';     // 'formula': subject = expression (rearranging)
+      | 'ordered-pairs' | 'formula'      // 'formula': subject = expression (rearranging)
+      // Later stages (the checker is designed for these now, implemented with their stage):
+      | 'interval' | 'point' | 'function' | 'complex' | 'vector' | 'matrix'
+      | 'limit'                          // a value, ±∞ or "does not exist"
+      | 'antiderivative'                 // equal up to an additive constant
+      | 'ode-solution';                  // checked by substitution into the equation
   canonical: string;                      // LaTeX of the canonical answer
   variables: string[];
   domain: DomainSpec;                     // where numeric sampling is valid
@@ -302,12 +336,17 @@ interface ErrorLogEntry {
 interface StudyDay { date: string /* YYYY-MM-DD, local, 04:00 rollover */; activeMs: number;
                      solved: number; goalMet: boolean; lightDay: boolean; }
 
-interface Settings { themeId: string; motion: 'full' | 'reduced' | 'still'; dailyGoalMin: number;
-                     lightDayMin: number; fontScale: number; inputMode: 'mathlive' | 'text'; }
+interface Settings { themeId: string; motion: 'system' | 'full' | 'reduced';
+                     fractalKind: 'julia' | 'mandelbrot' | 'burning-ship' | 'newton';
+                     // from checkpoint (d):
+                     dailyGoalMin: number; lightDayMin: number; fontScale: number;
+                     inputMode: 'mathlive' | 'text'; }
 ```
 
 Dexie tables: `attempts`, `topicProgress`, `reviewCards`, `errorLog`, `studyDays`, `kv`
-(settings, diagnostic result, onboarding flags). Schema is versioned; every version bump ships
+(diagnostic result, onboarding flags). `Settings` live in `localStorage` (small, and read
+synchronously at start-up so the right theme paints on the first frame with no flash); export
+and import include them. Schema is versioned; every version bump ships
 with an upgrade function and a migration test.
 
 **Export:** one JSON file `{ app: 'iterate', schemaVersion, exportedAt, tables: {...} }`.
@@ -348,33 +387,51 @@ record by id).
 - **Still mode:** a pre-rendered WebP (per theme) replaces the canvas when WebGL2 is missing,
   `prefers-reduced-motion` is set, the Motion setting is "Still", or the Battery Status API
   (Chromium only) reports a low, discharging battery. There is no standard web API for the
-  operating system's battery-saver mode, so this is best effort **[confirm acceptable]**.
+  operating system's battery-saver mode, so this is best effort (approved).
 
 ### 6.4 Precision and the zoom cap
 
-The shader uses 32-bit floats. Precision artifacts (blocky pixels) appear once the view width
-falls to roughly 10⁻⁵ to 10⁻⁶ of the base view. Mastery-driven zoom is capped at **1,000×**
-(view width ≥ 3 × 10⁻³), well inside float precision, so no double-single or perturbation
-tricks are needed. Documented in `src/fractal/README.md` when built.
+The shader uses 32-bit floats (about 1.2 × 10⁻⁷ relative precision), which turn visibly blocky
+once a pixel spans less than about 10⁻⁶ of the plane. Two limits keep the view well inside that:
+
+- Depth zoom runs from 1.5× to **1,000×** of each variant's base view.
+- The view's half-height never drops below **1.2 × 10⁻³** (`MIN_HALF_HEIGHT` in
+  `src/fractal/math.ts`). At 1,000 px that is a pixel of 2.4 × 10⁻⁶, a margin of about 10×.
+  Julia, Mandelbrot and Newton reach 1,000× before this floor; the Burning Ship, framed more
+  tightly on its small ships, stops at about 62×.
+
+So no double-single or perturbation tricks are needed. `fractal.test.ts` checks the floor and
+that the deepest view of every variant still has visible structure.
 
 ### 6.5 Depth: progress made visible
 
-`depth = overall mastery ∈ [0, 1]` (share of topics mastered, weighted by current retention).
-It maps to zoom `= 1.5 · 1000^depth` (1.5× up to the cap) and iteration budget `64 → 320`.
+`depth = overall mastery ∈ [0, 1]`: the share of all topics in the nine-stage curriculum
+(planned ones included) that are mastered, weighted by current retention. Measuring against the
+whole curriculum means depth keeps growing across the full journey and does not drop when a new
+stage is released.
+It maps to zoom `= 1.5 · (1000 / 1.5)^depth` (1.5× up to the cap) and iteration budget
+`96 → 320`. Each variant zooms toward a known boundary point: the Julia set's repelling fixed
+point (on the set for every c), the Mandelbrot seahorse valley, a point in the Burning Ship's
+mast lattice, and −∛½ for Newton (a preimage of the critical point 0). Newton brightness is
+corrected for depth, because convergence slows by about 2.85 iterations per doubling of zoom.
 The dashboard "Depth" readout shows the zoom as a magnification, e.g. "Depth 42×".
 
 ### 6.6 Topic fingerprints and thumbnails
 
-- `fingerprint(topicId)`: FNV-1a hash of the id gives an angle θ and a small radius jitter;
-  `c = (0.7885 + jitter) · e^{iθ}`. This circle passes close to the Mandelbrot boundary, so
-  every topic gets a visually rich, connected-looking Julia set. The function lives in
+- `fingerprint(topicId)`: FNV-1a hash of the id gives an angle θ and a scale s ∈ [1.005, 1.04];
+  `c = s · (e^{iθ}/2 − e^{2iθ}/4)`, just outside the main cardioid of the Mandelbrot set. Julia
+  sets for c there are intricate and well filled, so every topic gets a rich, distinct image. The function lives in
   `src/fractal/fingerprint.ts` and is shared by the shader and the build script, so the
   thumbnail matches the live header.
-- `scripts/render-thumbnails.ts` renders each topic at 256 px and 512 px on the CPU with the
-  same smoothing formula, encodes WebP with `sharp`, and also renders one fallback still per
-  theme. Runs as `prebuild`.
-- Mastery appearance: a CSS filter driven by a variable (`--lit`) from 0.25 (untouched or
-  locked, dim and toward black) to 1.0 (mastered, fully lit). Hover lifts brightness slightly.
+- `scripts/render-thumbnails.ts` renders each topic at 512 px (2×2 supersampled) on the CPU
+  with the same maths as the shader (`math.ts` + `shade.ts`, mirrored in GLSL), writes a 256 px
+  copy, and renders a 1600 × 1000 fallback still for every theme and variant. WebP via `sharp`.
+  Runs as `prebuild`, skips images that exist for the current `RENDER_VERSION` (about 75 s
+  from cold, cached in CI). Output goes to `public/generated/` (not committed).
+- Thumbnails are rendered once, light on dark; each theme adapts them with its
+  `thumbnailFilter` (Pearl inverts them to dark filaments on off-white).
+- Mastery appearance: `--lit` from 0 (untouched or locked: low opacity and contrast, fading
+  into the background) to 1 (mastered, fully lit). Hover lifts it slightly.
 
 ---
 
@@ -388,7 +445,7 @@ The dashboard "Depth" readout shows the zoom as a magnification, e.g. "Depth 42�
 - **Plain-text fallback**: accepts typed forms like `x^(1/2)`, `sqrt(x)`, `2/4`, `3x+2`,
   converted by `engine/plain-to-latex.ts`. A live KaTeX preview always shows the typeset
   result, so the app never displays caret notation. Typing `^` in this field is the only
-  place the character exists **[confirm acceptable]**.
+  place the character exists (approved).
 
 ### 7.2 Pipeline
 
@@ -432,6 +489,15 @@ function check(input: string, spec: AnswerSpec, rules?: MisconceptionRule[]): Ch
 6. **Formulae** (rearranging): the learner's answer must isolate the subject; the right-hand
    side is compared to the canonical one as an expression with the stated domain.
 
+### 7.3a Later-stage answer kinds
+
+The same two-layer design (exact fast path, then seeded numeric sampling) extends to later
+stages: complex answers sample real and imaginary parts; vectors and matrices compare
+entry by entry; `antiderivative` answers compare derivatives, or compare differences at sample
+points after removing the constant; `limit` answers are exact values, `\infty`, `-\infty` or
+"does not exist"; `ode-solution` answers are substituted into the equation and checked at
+sample points. Compute Engine already parses and differentiates these forms.
+
 ### 7.4 Form checks
 
 Each `FormRequirement` is a small function over the normalised non-canonical tree, e.g.
@@ -470,12 +536,13 @@ canonical answer for every seed.
   seed.
 - **Interleaving:** practice and review sessions mix about 30 % problems from earlier topics
   (due or weak first).
-- **Diagnostic placement:** adaptive, about 25 to 35 questions. Starts at a mid-stage topic at
+- **Diagnostic placement:** adaptive, about 25 to 35 questions over the *available* stages
+  (stage-scoped, so it can also be run for a single newly released stage). Starts at a mid-stage topic at
   difficulty 2; correct answers move to harder topics and mark prerequisites as probably strong,
   wrong answers move down the prerequisite graph. Each topic ends as strong, shaky or weak. The
   proposed route is the topological order of shaky and weak topics. Accept, edit or ignore.
 - **Study time:** active time only (visible tab and input within the last 2 minutes). The study
-  day rolls over at 04:00 local time **[confirm]**. A day counts for the streak if the daily goal is
+  day rolls over at 04:00 local time (approved). A day counts for the streak if the daily goal is
   met, or if light-day mode is on and about 20 minutes of review are done.
 
 ---
@@ -586,16 +653,18 @@ Command palette (Ctrl/Cmd + K) is global. Every route is code-split.
 
 ---
 
-## 14. Open questions and risks
+## 14. Decisions taken and remaining risks
 
-1. **[confirm]** IB MYP's official notation list sits in the subject guide behind the IB
+1. **Approved.** IB MYP's official notation list sits in the subject guide behind the IB
    Programme Resource Centre and could not be accessed. Conventions in CONTENT_GUIDE section 2
    are inferred; please correct anything your school does differently.
-2. **[confirm]** Proposed topic splits (CONTENT_GUIDE section 8): "changing the subject" as three
+2. **Approved.** Proposed topic splits (CONTENT_GUIDE section 8): "changing the subject" as three
    topics, factorising as three, algebraic fractions as two, logs as three.
-3. **[confirm]** "Subject appears twice" in Stage 2 requires taking out a common factor, which is
+3. **Approved.** "Subject appears twice" in Stage 2 requires taking out a common factor, which is
    formally a Stage 3 topic. Proposal: teach "taking out a single common factor" as the reverse
    of expanding at the end of `s2-expanding-single-brackets`.
 4. Compute Engine is pre-1.0; mitigated by the adapter, the exact pin and the generator suite.
-5. Scope: 51 topics is a large amount of verified content. Batches report verification output
-   as specified.
+5. Scope: 51 topics in Stages 1 to 3, and roughly 120 more in Stages 4 to 9, is a large amount of
+   verified content. Batches report verification output as specified.
+6. Stage 4 to 9 topic lists and prerequisites in `curriculum.ts` are provisional until each stage
+   is built and reviewed.

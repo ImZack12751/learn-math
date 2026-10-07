@@ -190,10 +190,26 @@ Definitions use only words a learner at that point already knows.
 
 ---
 
-## 8. Curriculum map (proposed, for review)
+## 8. Curriculum map
 
-`→` lists direct prerequisites. Order within each stage is the study order. Items in *italics*
-are proposed splits or changes to the original list, awaiting confirmation.
+Nine stages. The source of truth is `src/content/curriculum.ts`; this section mirrors Stages 1 to
+3 (approved 2026-10-07). `→` lists direct prerequisites. Order within each stage is the study
+order. Items in *italics* are the approved splits of the original list.
+
+| Stage | Title | Requires | Status |
+|---|---|---|---|
+| 1 | Arithmetic | none | building first |
+| 2 | Algebra foundations | 1 | building first |
+| 3 | Intermediate algebra | 2 | building first |
+| 4 | Functions and graphs | 3 | planned |
+| 5 | Trigonometry | 4 | planned |
+| 6 | Advanced algebra and precalculus | 5 (then any order with 7 and 8) | planned |
+| 7 | Differential calculus | 4, 5 | planned |
+| 8 | Integral calculus and series | 7 | planned |
+| 9 | Advanced (optional stretch) | 6, 8 | planned |
+
+Stages 4 to 9 are recorded topic by topic in `curriculum.ts` as `planned` entries with provisional
+prerequisites. They are reviewed and finalised when each stage is built.
 
 ### Stage 1: Arithmetic
 

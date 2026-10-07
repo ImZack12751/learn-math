@@ -1,7 +1,10 @@
 # CLAUDE.md: Iterate
 
-Iterate is a premium, local-first web app for relearning school mathematics (arithmetic to
-intermediate algebra). Full design: `ARCHITECTURE.md`. Writing rules: `CONTENT_GUIDE.md`.
+Iterate is a premium, local-first web app for relearning school mathematics from first
+principles: arithmetic through algebra, functions, trigonometry, precalculus and single-variable
+calculus (AP Calculus BC / IB Maths AA HL standard), plus an optional advanced stage. Nine stages
+in total. Stages 1 to 3 are built first, but the data model, stage map, diagnostic and math engine
+are designed for all nine. Full design: `ARCHITECTURE.md`. Writing rules: `CONTENT_GUIDE.md`.
 Read both before non-trivial work.
 
 ## Non-negotiables
@@ -34,6 +37,16 @@ Read both before non-trivial work.
 - The answer checker never trusts Compute Engine's `isEqual` alone; value equivalence uses
   seeded numeric sampling over the stated domain, and form checks use the non-canonical tree.
 - Deployed to GitHub Pages at base `/learn-math/`.
+- The fractal maths lives in `src/fractal/math.ts` + `shade.ts` and is mirrored in
+  `shaders/fractal.frag.glsl`. Change both together and bump `RENDER_VERSION` in `stills.ts`.
+- Text over the fractal must sit on a panel, a glass `Eyebrow`, a `.scrim` (large text only) or
+  the header/footer bands. `themes.test.ts` proves each of those passes WCAG in every theme.
+
+## Commands
+
+- `npm run dev`: dev server. `npm run build`: renders fractal images, builds, writes 404.html.
+- `npm run ci`: everything CI runs. Locally with a preinstalled Chromium:
+  `PW_CHROMIUM_PATH=/opt/pw-browsers/chromium npm run ci`.
 
 ## Workflow
 
@@ -47,10 +60,10 @@ Read both before non-trivial work.
 
 ## Status
 
-- [x] Plan: ARCHITECTURE.md, CONTENT_GUIDE.md, CLAUDE.md (awaiting review)
-- [ ] (a) Design system, themes, fractal engine, landing page
+- [x] Plan: ARCHITECTURE.md, CONTENT_GUIDE.md, CLAUDE.md (approved 2026-10-07)
+- [x] (a) Design system, themes, fractal engine, landing page (awaiting review)
 - [ ] (b) Math engine, test suite, CI
 - [ ] (c) Vertical slice: `s2-fractional-exponents` (stop for approval)
 - [ ] (d) Learning system
-- [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches
+- [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches (Stages 4 to 9 later, same process)
 - [ ] (f) Polish, accessibility, performance, PWA
