@@ -2,7 +2,7 @@
  * Every generator, discovered from the topic files: `src/generators/stageN/<topic-id>.ts` exports
  * `generators`. Adding a topic file is all it takes to register its generators.
  */
-import type { AnyGenerator } from './types';
+import type { AnyGenerator, ExampleSpec } from './types';
 
 const modules = import.meta.glob<readonly AnyGenerator[]>('./stage*/*.ts', {
   eager: true,
@@ -26,4 +26,15 @@ export function getGenerator(id: string): AnyGenerator | undefined {
 
 export function generatorsForTopic(topicId: string): AnyGenerator[] {
   return generators.filter((g) => g.topicId === topicId);
+}
+
+const exampleModules = import.meta.glob<Record<string, ExampleSpec> | undefined>('./stage*/*.ts', {
+  eager: true,
+  import: 'examples',
+});
+
+/** Worked examples by topic id (the topic file's `examples` export). */
+export function examplesForTopic(topicId: string): Record<string, ExampleSpec> {
+  const entry = Object.entries(exampleModules).find(([file]) => file.endsWith(`/${topicId}.ts`));
+  return entry?.[1] ?? {};
 }

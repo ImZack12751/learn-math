@@ -26,6 +26,11 @@ export interface MisconceptionRule<P> {
   id: MisconceptionId;
   /** The wrong answer this faulty rule gives, as LaTeX; null when it would coincide with the right one. */
   produce: (p: P) => string | null;
+  /**
+   * The faulty working, for the worked example that fails on purpose. Its last line must equal
+   * `produce(p)` (checked by the content tests).
+   */
+  wrongSteps?: (p: P) => SolutionStep[];
 }
 
 /**
@@ -66,4 +71,24 @@ export interface ProblemInstance extends BuiltProblem {
   seed: number;
   /** The wrong answers each faulty rule gives for this problem, for feedback. */
   misconceptionAnswers: MisconceptionAnswer[];
+}
+
+/** How much of a worked example is shown (CONTENT_GUIDE section 5). */
+export type Fade = 'full' | 'last-1' | 'last-2' | 'learner';
+
+/** A worked example: authored parameters run through the generator's own `build`. */
+export interface ExampleSpec {
+  generatorId: string;
+  difficulty: Difficulty;
+  params: unknown;
+  fade: Fade;
+  /** Set for the example that fails on purpose: shows this misconception's faulty working. */
+  misconception?: MisconceptionId;
+}
+
+export function defineExample<P>(
+  generator: Generator<P>,
+  spec: { difficulty: Difficulty; params: P; fade: Fade; misconception?: MisconceptionId },
+): ExampleSpec {
+  return { generatorId: generator.id, ...spec };
 }
