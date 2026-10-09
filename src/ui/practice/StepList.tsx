@@ -1,7 +1,6 @@
 import { motion } from 'motion/react';
 import type { SolutionStep } from '../../engine/types';
 import { Tex } from '../math/Tex';
-import { Icon } from '../primitives/Icon';
 
 interface StepListProps {
   steps: readonly SolutionStep[];
@@ -24,7 +23,11 @@ export function StepList({ steps, visible = steps.length, wrong = false }: StepL
           className="grid gap-x-6 gap-y-1 border-b border-line pb-3 last:border-none md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
         >
           <div className="flex items-start gap-2 overflow-x-auto text-fg">
-            {wrong && <Icon name="cross" label="Faulty step:" className="mt-1 shrink-0" />}
+            {wrong && (
+              <span className="label-mono mt-1 shrink-0 rounded-full border border-line-strong px-2 py-0.5">
+                Faulty
+              </span>
+            )}
             <Tex tex={step.math} />
           </div>
           <p className="text-sm text-fg-muted">{step.reason}</p>
