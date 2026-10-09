@@ -66,6 +66,20 @@ export const misconceptions = {
     topic: 's2-fractional-exponents',
     section: 'general-fractional-exponents',
   },
+  'fractional-exponent-ignore-numerator': {
+    name: 'Taking the root but forgetting the power',
+    faultyRule: 'a^{\\frac{m}{n}} = \\sqrt[n]{a}',
+    why: 'The denominator gives the root, and the numerator still says what power to raise it to. Both parts matter.',
+    topic: 's2-fractional-exponents',
+    section: 'general-fractional-exponents',
+  },
+  'swap-root-and-power': {
+    name: 'Swapping the root and the power',
+    faultyRule: 'a^{\\frac{m}{n}} = \\sqrt[m]{a^{n}}',
+    why: 'The denominator is always the root and the numerator is always the power: the bottom number goes on the root sign.',
+    topic: 's2-fractional-exponents',
+    section: 'radical-and-exponent-form',
+  },
   'distribute-power-over-sum': {
     name: 'Distributing a power over a sum',
     faultyRule: '(a + b)^{2} = a^{2} + b^{2}',

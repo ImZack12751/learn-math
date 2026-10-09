@@ -250,6 +250,12 @@ describe('expressions', () => {
       ['\\left(\\sqrt{x}\\right)^{3}', 'correct'],
       ['x^{\\frac{3}{2}}', 'right-value-wrong-form'],
     ]);
+    expectVerdict(expr('5x^{-\\frac{2}{3}}', ['power-term'], { ranges: { x: [0.5, 5] } }), [
+      ['5x^{-\\frac{2}{3}}', 'correct'],
+      ['\\frac{5}{x^{\\frac{2}{3}}}', 'right-value-wrong-form'],
+      ['\\frac{5}{\\sqrt[3]{x^{2}}}', 'right-value-wrong-form'],
+      ['5x^{\\frac{2}{3}}', 'incorrect'],
+    ]);
     expectVerdict(expr('2^{7}', ['single-power']), [
       ['2^{7}', 'correct'],
       ['128', 'right-value-wrong-form'],

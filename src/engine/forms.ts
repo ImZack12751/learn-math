@@ -290,6 +290,8 @@ export function formIssue(req: FormRequirement, node: Node): string | null {
       const ok = n.k === 'sym' || (n.k === 'pow' && (n.base.k === 'sym' || n.base.k === 'num'));
       return ok ? null : 'Write the answer as a single power.';
     }
+    case 'power-term':
+      return powerTermIssue(node);
     case 'exponent-form':
       return some(node, (n) => n.k === 'sqrt' || n.k === 'root')
         ? 'Write the answer using exponents, without root signs.'
@@ -301,6 +303,19 @@ export function formIssue(req: FormRequirement, node: Node): string | null {
     case 'standard-form':
       return standardFormIssue(node);
   }
+}
+
+/** k·xⁿ: an optional number times one letter, or one power of one letter. */
+function powerTermIssue(node: Node): string | null {
+  const isLetterPower = (n: Node) =>
+    n.k === 'sym' || (n.k === 'pow' && n.base.k === 'sym' && exact(n.exp) !== null);
+  const n = stripNeg(node);
+  if (isLetterPower(n)) return null;
+  if (n.k === 'mul' && n.args.length === 2) {
+    const [k, x] = n.args as [Node, Node];
+    if (exact(k) !== null && !some(k, (c) => c.k === 'sym') && isLetterPower(x)) return null;
+  }
+  return 'Write the answer as a number times a single power, like 3x to a power.';
 }
 
 function standardFormIssue(node: Node): string | null {

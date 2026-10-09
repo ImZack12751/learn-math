@@ -30,6 +30,8 @@ export type FormRequirement =
   | 'rationalised-denominator'
   | 'positive-exponents'
   | 'single-power'
+  /** A number times a single power of one letter: k·xⁿ. */
+  | 'power-term'
   | 'exponent-form'
   | 'radical-form'
   | 'standard-form';
