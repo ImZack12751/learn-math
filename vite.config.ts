@@ -1,10 +1,17 @@
 import { defineConfig } from 'vitest/config';
+import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react';
+import remarkMath from 'remark-math';
+import remarkTex from './scripts/remark-tex';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   base: '/learn-math/',
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    { enforce: 'pre', ...mdx({ remarkPlugins: [remarkMath, remarkTex] }) },
+    react({ include: /\.(mdx|tsx|ts)$/ }),
+    tailwindcss(),
+  ],
   worker: { format: 'es' },
   build: { target: 'es2022', assetsInlineLimit: 0 },
   test: {

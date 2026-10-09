@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Link, useParams } from 'react-router';
 import { getStage, getTopic } from '../content/curriculum';
 import { useProgressSummary } from '../data/progress';
@@ -6,6 +7,10 @@ import { Eyebrow } from '../ui/primitives/Eyebrow';
 import { Icon } from '../ui/primitives/Icon';
 import { Meter } from '../ui/primitives/Meter';
 import { Panel } from '../ui/primitives/Panel';
+import { examplesForTopic, generatorsForTopic } from '../generators/registry';
+import { mdxComponents } from '../ui/mdx/components';
+import { TopicContext } from '../ui/mdx/TopicContext';
+import { availableTopics, LessonView } from './lessons';
 import { NotFound } from './NotFound';
 
 /**
@@ -83,13 +88,29 @@ export function TopicPage() {
         </div>
       </Panel>
 
-      <Panel className="mt-3 p-6">
-        <p className="label-mono">Lesson</p>
-        <p className="measure mt-2 text-fg-muted">
-          This lesson is being written. Each lesson goes through the engine's verification before it
-          appears here, so every example and answer is checked by code.
-        </p>
-      </Panel>
+      {availableTopics.has(topic.id) ? (
+        <TopicContext.Provider
+          value={{
+            topic,
+            generators: generatorsForTopic(topic.id),
+            examples: examplesForTopic(topic.id),
+          }}
+        >
+          <Suspense fallback={<div className="min-h-[60dvh]" aria-busy="true" />}>
+            <div className="mt-16 space-y-20">
+              <LessonView topicId={topic.id} components={mdxComponents} />
+            </div>
+          </Suspense>
+        </TopicContext.Provider>
+      ) : (
+        <Panel className="mt-3 p-6">
+          <p className="label-mono">Lesson</p>
+          <p className="measure mt-2 text-fg-muted">
+            This lesson is being written. Each lesson goes through the engine's verification before
+            it appears here, so every example and answer is checked by code.
+          </p>
+        </Panel>
+      )}
     </article>
   );
 }

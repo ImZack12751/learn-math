@@ -32,7 +32,10 @@ function prepare() {
   const current = existsSync(manifestFile)
     ? (JSON.parse(readFileSync(manifestFile, 'utf8')) as { version: number }).version
     : -1;
-  if (current !== RENDER_VERSION) rmSync(join(out, 'generated'), { recursive: true, force: true });
+  if (current !== RENDER_VERSION) {
+    for (const dir of ['thumbs', 'stills'])
+      rmSync(join(out, 'generated', dir), { recursive: true, force: true });
+  }
   mkdirSync(join(out, 'generated', 'thumbs'), { recursive: true });
   mkdirSync(join(out, 'generated', 'stills'), { recursive: true });
 }

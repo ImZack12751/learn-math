@@ -107,6 +107,58 @@
       0 24px 60px -30px rgb(0 0 0 / 0.55);
   }
 
+  /* Answer fields: the MathLive maths field and the plain-text fallback share one look. */
+  .math-field-shell {
+    display: block;
+    width: 100%;
+    min-height: 3.5rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--c-line-strong);
+    background: color-mix(in srgb, var(--c-bg) 55%, transparent);
+    padding: 0.7rem 1rem;
+    font-size: 1.35rem;
+    color: var(--c-fg);
+    --caret-color: var(--c-fg);
+    --selection-background-color: color-mix(in srgb, var(--c-fg) 22%, transparent);
+    --selection-color: var(--c-fg);
+    --contains-highlight-background-color: color-mix(in srgb, var(--c-fg) 6%, transparent);
+    --smart-fence-color: var(--c-fg-faint);
+  }
+  .math-field-shell:focus,
+  .math-field-shell:focus-within {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 3px;
+  }
+  math-field::part(menu-toggle) {
+    display: none;
+  }
+
+  /* Reading text in lessons: soft off-white, generous line height, about 65 characters wide. */
+  .lesson-prose p,
+  .lesson-prose ul,
+  .lesson-prose ol {
+    margin-block: 0.9em;
+    line-height: 1.75;
+    color: var(--c-fg);
+  }
+  .lesson-prose ul {
+    list-style: disc;
+    padding-left: 1.4em;
+  }
+  .lesson-prose li + li {
+    margin-top: 0.5em;
+  }
+  .lesson-prose .katex-display {
+    margin-block: 1em;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  /* Maths in problem prompts is read closely: fractional exponents need to be legible. */
+  .prompt .katex {
+    font-size: 1.2em;
+  }
+
   .label-mono {
     font-family: var(--font-mono);
     font-size: 0.72rem;

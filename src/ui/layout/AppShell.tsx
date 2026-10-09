@@ -23,7 +23,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <span className="font-display text-[1.7rem] leading-none italic">Iterate</span>
             </Link>
-            <DisplayMenu />
+            <nav aria-label="Main" className="flex items-center gap-2">
+              <Link
+                to="/#stages"
+                className="glass inline-flex min-h-11 items-center rounded-full px-4 text-sm text-fg-muted transition-colors duration-300 hover:text-fg"
+              >
+                Topics
+              </Link>
+              <DisplayMenu />
+            </nav>
           </div>
         </header>
         <main id="main" tabIndex={-1} className="flex-1 outline-none">

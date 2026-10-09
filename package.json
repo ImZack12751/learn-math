@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "prebuild": "tsx scripts/render-thumbnails.ts",
+    "prebuild": "tsx scripts/copy-vendor.ts && tsx scripts/render-thumbnails.ts",
     "build": "vite build && tsx scripts/spa-fallback.ts",
     "preview": "vite preview",
     "lint": "eslint . --max-warnings 0",
@@ -18,7 +18,8 @@
     "test": "vitest run --project unit",
     "e2e": "playwright test",
     "ci": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run verify:content && npm run build && npm run e2e",
-    "verify:content": "vitest run --project content"
+    "verify:content": "vitest run --project content",
+    "predev": "tsx scripts/copy-vendor.ts && tsx scripts/render-thumbnails.ts"
   },
   "dependencies": {
     "@cortex-js/compute-engine": "0.149.0",
@@ -26,6 +27,7 @@
     "@fontsource-variable/jetbrains-mono": "5.3.0",
     "@fontsource/instrument-serif": "5.3.0",
     "katex": "0.19.0",
+    "mathlive": "0.111.1",
     "motion": "14.0.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -34,9 +36,11 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@mdx-js/rollup": "3.1.1",
     "@playwright/test": "1.63.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/katex": "0.16.8",
+    "@types/mdx": "2.0.14",
     "@types/node": "22.20.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
@@ -45,6 +49,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.13.0",
     "prettier": "3.9.9",
+    "remark-math": "6.0.0",
     "sharp": "0.35.5",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.15",
