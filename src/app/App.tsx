@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { lazy, Suspense, useEffect, useRef } from 'react';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router';
 import { Landing } from '../pages/Landing';
 import { NotFound } from '../pages/NotFound';
 import { FractalProvider } from '../ui/fractal/FractalProvider';
@@ -31,6 +31,23 @@ function AnimatedRoutes() {
     document.getElementById('main')?.focus({ preventScroll: true });
   }, [location.pathname, location.hash]);
 
+  // Links such as /#stages: scroll once the target exists (after any page transition).
+  useEffect(() => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    let frame = 0;
+    const deadline = performance.now() + 1500;
+    const seek = () => {
+      const target = document.getElementById(id);
+      if (target) target.scrollIntoView({ block: 'start' });
+      else if (performance.now() < deadline) frame = requestAnimationFrame(seek);
+    };
+    seek();
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  }, [location.key, location.hash]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
@@ -43,6 +60,7 @@ function AnimatedRoutes() {
         <Suspense fallback={<div className="min-h-[60dvh]" />}>
           <Routes location={location}>
             <Route path="/" element={<Landing />} />
+            <Route path="/index.html" element={<Navigate to="/" replace />} />
             <Route path="/topic/:id" element={<TopicPage />} />
             <Route path="/design" element={<DesignSystem />} />
             <Route path="*" element={<NotFound />} />

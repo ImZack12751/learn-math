@@ -6,6 +6,7 @@ import { useProgressSummary } from '../data/progress';
 import { depthToZoom } from '../fractal/math';
 import { overallDepth } from '../learning/depth';
 import { useFractal } from '../ui/fractal/FractalProvider';
+import { availableTopics } from './lessons';
 import { Thumbnail } from '../ui/fractal/Thumbnail';
 import { ButtonLink, buttonClass } from '../ui/primitives/Button';
 import { CountUp } from '../ui/primitives/CountUp';
@@ -144,7 +145,8 @@ interface StageCardProps {
 }
 
 function StageCard({ stage, index, mastery }: StageCardProps) {
-  const [open, setOpen] = useState(false);
+  // The stages being built show their topics straight away; later stages open on request.
+  const [open, setOpen] = useState(stage.id <= BUILD_SCOPE);
   const listId = useId();
   const total = stage.topics.length;
   const done = stage.topics.filter((t) => (mastery.get(t.id) ?? 0) >= 0.9).length;
@@ -217,6 +219,11 @@ function StageCard({ stage, index, mastery }: StageCardProps) {
                     className="size-7 rounded-md"
                   />
                   {topic.title}
+                  {availableTopics.has(topic.id) && (
+                    <span className="label-mono ml-auto rounded-full border border-line-strong px-2 py-0.5 text-fg">
+                      Ready
+                    </span>
+                  )}
                 </Link>
               </li>
             ))}

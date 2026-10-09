@@ -26,7 +26,10 @@ test('landing page renders the hero, progress and stages with no external reques
   await expect(page.getByRole('link', { name: /Begin with Stage 1/ })).toBeVisible();
   await expect(page.getByText('Reviews today')).toBeVisible();
   await expect(page.getByText('Depth', { exact: true })).toBeVisible();
-  await expect(page.locator('#stages ol > li')).toHaveCount(9);
+  await expect(page.locator('#stages > ol > li')).toHaveCount(9);
+  // Stage 1 to 3 topics are listed openly, and written lessons are marked.
+  await expect(page.getByRole('link', { name: 'Integers and the number line' })).toBeAttached();
+  await expect(page.getByRole('link', { name: /Fractional exponents\s*Ready/ })).toBeAttached();
   await page.waitForLoadState('networkidle');
   expect(seen.external).toEqual([]);
   expect(seen.errors).toEqual([]);
@@ -93,7 +96,9 @@ test('a topic deep link shows its header with fingerprint and prerequisites', as
   const seen = watch(page);
   await page.goto('./topic/s2-fractional-exponents');
   await expect(page.getByRole('heading', { level: 1, name: 'Fractional exponents' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Zero and negative exponents' })).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Zero and negative exponents' }).first(),
+  ).toBeVisible();
   await expect(page.getByRole('meter', { name: /Mastery of Fractional exponents/ })).toBeVisible();
   const thumb = page.locator('img.thumb').first();
   await expect.poll(() => thumb.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBe(512);
