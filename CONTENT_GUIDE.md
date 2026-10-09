@@ -106,20 +106,31 @@ Every topic MDX uses these sections, in this order. `verify:content` checks the 
 
 | Component | Use |
 |---|---|
-| `<Section id>` | Anchor for misconception and glossary links |
+| `<Section id title>` | A part of the explanation; its id is the anchor feedback links to |
+| `<Prose>` | Reading text on a panel (sections already include one) |
 | `<Callout kind="idea" \| "note" \| "warning">` | Short highlighted aside |
-| `<Term id>` | Glossary term with hover card; first use on the page |
-| `<Prereq id>` | Link to a prerequisite topic, with a one-line reminder |
-| `<Claim tex="..." />` | Displays a true statement; **verified at build time** |
-| `<Visual name props>` | Static diagram from `ui/diagrams` |
-| `<Interactive name props>` | Diagram with controls (slider, drag) |
-| `<WorkedExample id>` | Renders an example defined in the generator file |
+| `<Term id>` | Glossary term with a hover and focus card |
+| `<Prereq id>` | Link to a prerequisite topic |
+| `<Claim tex="..." display />` | A true statement; **verified at build time** |
+| `<PowerLadder>` and other diagrams | Interactive visuals from `src/ui/diagrams` |
+| `<WorkedExample id title>` | Renders an example defined in the generator file |
 | `<Misconception id>` | Explains a catalogued misconception in context |
-| `<Takeaways>` | Rules and common errors (bulleted) |
+| `<Takeaways>` | Rules and common errors (bulleted), collected into the cheat sheet |
+| `<WhyItMatters>`, `<Explanation>`, `<WorkedExamples>`, `<Practice />`, `<NextUp />`, `<CheckYourself />` | The lesson's fixed sections |
+
+Write display maths on its own lines:
+
+```
+$$
+a^{\frac{1}{n}} = \sqrt[n]{a}
+$$
+```
 
 Inline maths `$...$` is for expressions that make no numeric claim (`$x^{2}$`, `$a^{m}$`). Any
 statement that something *equals* something with specific numbers goes in `<Claim>` so the
 engine checks it. Example: write `<Claim tex="8^{\frac{2}{3}} = 4" />`, not `$8^{2/3} = 4$`.
+Claims may contain letters (`<Claim tex="x^{\frac{1}{2}} = \sqrt{x}" />`); they are checked as
+identities for positive values, so say in the prose that the letter stands for a positive number.
 
 ---
 

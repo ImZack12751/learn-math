@@ -599,17 +599,34 @@ In MDX: `<WorkedExample id="fe-ex2" />`. The component runs `build(params)` and 
 
 ### 9.3 Build-time verification (`npm run verify:content`)
 
-Fails the build if any of these fail:
+As built in `src/content/lessons.test.ts` (plus `glossary.test.ts`, `misconceptions.test.ts`,
+`curriculum.test.ts` and the generator suite). Fails the build if any of these fail:
 
-- Every worked example builds, its last step equals its answer, and its answer matches
-  `solveDirectly`.
-- Every `<Claim tex="8^{2/3} = 4" />` in MDX is true (verified by the engine).
-- Every `<Term>`, `<Prereq>`, `<WorkedExample>`, misconception id and section anchor resolves.
-- The prerequisite graph is acyclic, and every prerequisite comes earlier in curriculum order.
-- No topic links to, or uses a glossary term first taught in, a later topic.
-- Every topic page has the required sections in the required order (CONTENT_GUIDE section 3).
+- The lesson belongs to a curriculum topic, sits in its stage folder and has generators.
+- The required sections appear, in order (CONTENT_GUIDE section 3), and only lesson components
+  are used.
+- Every `<Claim>` is true: each side of an equality chain is compared by the engine (letters
+  stand for positive numbers).
+- Every piece of maths renders in KaTeX, and the prose contains no caret notation.
+- Every `<Term>` exists in the glossary and is taught in this topic or one of its prerequisites
+  (transitively); every `<Prereq>` is a prerequisite.
+- Every misconception the catalogue assigns to the topic has its `<Section>` anchor; section ids
+  are unique.
+- Every worked example is shown; the set has a full, a faded, a learner-solved and a
+  fails-on-purpose example; each builds, matches `solveDirectly` and ends on its answer; the
+  faulty working ends on the misconception's wrong answer, which the checker rejects.
 
----
+The checks were each proved to fire by planting a fault (a false claim, caret notation, a term
+taught later) and watching the suite fail.
+
+### 9.4 Rendering lessons
+
+MDX is compiled by `@mdx-js/rollup`. `remark-math` parses `$…$` and `$$…$$`, and
+`scripts/remark-tex.ts` turns them into the app's own `<Tex>` component, so lessons are typeset
+by the same bundled KaTeX version as everything else. `src/pages/lessons.tsx` discovers lessons
+by file name; a topic is available exactly when its MDX exists. Lessons import nothing: every
+component comes from `src/ui/mdx/components.ts`. The glossary (`src/content/glossary.ts`) and the
+misconception catalogue are shared data that lessons refer to by id.
 
 ## 10. Pages and routes
 

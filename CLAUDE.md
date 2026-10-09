@@ -65,8 +65,8 @@ Read both before non-trivial work.
 
 - [x] Plan: ARCHITECTURE.md, CONTENT_GUIDE.md, CLAUDE.md (approved 2026-10-07)
 - [x] (a) Design system, themes, fractal engine, landing page (approved)
-- [x] (b) Math engine, test suite, CI (awaiting review)
-- [ ] (c) Vertical slice: `s2-fractional-exponents` (stop for approval)
+- [x] (b) Math engine, test suite, CI (approved)
+- [x] (c) Vertical slice: `s2-fractional-exponents` (awaiting approval)
 - [ ] (d) Learning system
 - [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches (Stages 4 to 9 later, same process)
 - [ ] (f) Polish, accessibility, performance, PWA
