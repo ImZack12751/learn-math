@@ -129,7 +129,9 @@ $$
 Inline maths `$...$` is for expressions that make no numeric claim (`$x^{2}$`, `$a^{m}$`). Any
 statement that something *equals* something with specific numbers goes in `<Claim>` so the
 engine checks it. Example: write `<Claim tex="8^{\frac{2}{3}} = 4" />`, not `$8^{2/3} = 4$`.
-Claims may contain letters (`<Claim tex="x^{\frac{1}{2}} = \sqrt{x}" />`); they are checked as
+Claims may also be inequalities between numbers (`<Claim tex="-7 < -3" />`) or equal ratios
+(`<Claim tex="12 : 18 = 2 : 3" />`). Units cannot be checked, so unit facts such as 1 km = 1000 m go
+in plain display maths. Claims may contain letters (`<Claim tex="x^{\frac{1}{2}} = \sqrt{x}" />`); they are checked as
 identities for positive values, so say in the prose that the letter stands for a positive number.
 
 ---
@@ -229,7 +231,7 @@ order. Items in *italics* are the approved splits of the original list.
 
 | Stage | Title | Requires | Status |
 |---|---|---|---|
-| 1 | Arithmetic | none | building first |
+| 1 | Arithmetic | none | written (14 of 14 lessons) |
 | 2 | Algebra foundations | 1 | building first |
 | 3 | Intermediate algebra | 2 | building first |
 | 4 | Functions and graphs | 3 | planned |

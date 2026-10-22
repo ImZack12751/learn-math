@@ -30,6 +30,12 @@ test('landing page renders the hero, progress and stages with no external reques
   // Stage 1 to 3 topics are listed openly, and written lessons are marked.
   await expect(page.getByRole('link', { name: 'Integers and the number line' })).toBeAttached();
   await expect(page.getByRole('link', { name: /Fractional exponents\s*Ready/ })).toBeAttached();
+  // How much is written so far: Stage 1 complete.
+  await expect(page.getByRole('heading', { name: /\d+ of \d+ lessons ready/ })).toBeVisible();
+  await expect(page.getByRole('meter', { name: 'Stage 1 lessons ready' })).toHaveAttribute(
+    'aria-valuenow',
+    '100',
+  );
   await page.waitForLoadState('networkidle');
   expect(seen.external).toEqual([]);
   expect(seen.errors).toEqual([]);

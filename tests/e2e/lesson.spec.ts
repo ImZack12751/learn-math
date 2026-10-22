@@ -90,3 +90,19 @@ test('the power ladder recalculates when the base changes', async ({ page }) => 
   await expect(ladder.getByText(/Each step multiplies by/)).toContainText('2');
   await expect(ladder.locator('tbody tr')).toHaveCount(7);
 });
+
+test('a Stage 1 lesson checks a ratio typed as plain text', async ({ page }) => {
+  const seen = watchErrors(page);
+  await page.goto('./topic/s1-ratio-proportion');
+  await expect(
+    page.getByRole('heading', { level: 2, name: 'From first principles' }),
+  ).toBeVisible();
+  const practice = page.locator('section#practice');
+  await practice.getByRole('radio', { name: 'Simplify ratios' }).check({ force: true });
+  await expect(practice.getByText(/in its simplest form/)).toBeVisible();
+  await practice.getByRole('button', { name: 'Type as plain text instead' }).click();
+  await practice.getByRole('textbox').first().fill('1:1');
+  await practice.getByRole('button', { name: 'Check' }).click();
+  await expect(practice.getByText('Not quite.')).toBeVisible();
+  expect(seen.errors).toEqual([]);
+});

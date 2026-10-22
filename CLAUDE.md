@@ -69,4 +69,5 @@ Read both before non-trivial work.
 - [x] (c) Vertical slice: `s2-fractional-exponents` (awaiting approval)
 - [ ] (d) Learning system
 - [ ] (e) Content: Stage 1, Stage 2, Stage 3 in batches (Stages 4 to 9 later, same process)
+  - [x] Stage 1: all 14 lessons written (awaiting approval); (d) learning system not yet built
 - [ ] (f) Polish, accessibility, performance, PWA

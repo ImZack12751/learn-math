@@ -246,6 +246,7 @@ interface Hint { level: 'nudge' | 'method' | 'first-step'; body: RichText; }
 interface AnswerSpec {
   kind: 'number' | 'expression' | 'equation' | 'solution-set' | 'inequality'
       | 'ordered-pairs' | 'formula'      // 'formula': subject = expression (rearranging)
+      | 'ratio'                          // 2 : 3, equal when proportional (added in Stage 1)
       // Later stages (the checker is designed for these now, implemented with their stage):
       | 'interval' | 'point' | 'function' | 'complex' | 'vector' | 'matrix'
       | 'limit'                          // a value, ±∞ or "does not exist"
@@ -264,7 +265,9 @@ type FormRequirement =
   | 'factorised' | 'expanded' | 'collected'
   | 'simplest-surd' | 'rationalised-denominator'
   | 'positive-exponents' | 'single-power' | 'exponent-form' | 'radical-form'
-  | 'standard-form';                      // scientific notation (IB: "standard form")
+  | 'standard-form'                       // scientific notation (IB: "standard form")
+  | 'integer' | 'power-term'
+  | 'simplest-ratio' | 'prime-factorisation';  // added in Stage 1
 
 interface DomainSpec {
   ranges: Record<string, [number, number]>;
@@ -511,6 +514,10 @@ function check(input: string, spec: AnswerSpec, rules?: MisconceptionRule[]): Ch
 6. **Ordered pairs**: sets of tuples, from `(1, 2), (-1, 0)` or `x = 2, y = 3`.
 7. **Formulae** (rearranging): the subject must stand alone on one side and must not appear on
    the other; that side is compared to the canonical one as an expression.
+8. **Ratios** (added in Stage 1): `2 : 3` (typed `2:3`) parses as a ratio. Two ratios are equal
+   when they have the same number of positive parts and are proportional, so `4 : 6` has the
+   right value; the `simplest-ratio` form then asks for whole numbers with no common factor.
+   `prime-factorisation` accepts any product of primes, with or without exponents.
 
 ### 7.3a Later-stage answer kinds
 
@@ -606,7 +613,8 @@ As built in `src/content/lessons.test.ts` (plus `glossary.test.ts`, `misconcepti
 - The required sections appear, in order (CONTENT_GUIDE section 3), and only lesson components
   are used.
 - Every `<Claim>` is true: each side of an equality chain is compared by the engine (letters
-  stand for positive numbers).
+  stand for positive numbers); inequalities between numbers (`-7 < -3`) are compared exactly, and
+  equal ratios (`12 : 18 = 2 : 3`) part by part.
 - Every piece of maths renders in KaTeX, and the prose contains no caret notation.
 - Every `<Term>` exists in the glossary and is taught in this topic or one of its prerequisites
   (transitively); every `<Prereq>` is a prerequisite.
