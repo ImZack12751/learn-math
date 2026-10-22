@@ -80,6 +80,27 @@ export const misconceptions = {
     topic: 's1-fractions-equivalent',
     section: 'comparing',
   },
+  'divide-one-part-only': {
+    name: 'Dividing only one part of the fraction',
+    faultyRule: '\\frac{18}{24} = \\frac{18 \\div 6}{24}',
+    why: 'A fraction keeps its value only when the numerator and the denominator are both divided, or both multiplied, by the same number.',
+    topic: 's1-simplifying-fractions',
+    section: 'simplifying',
+  },
+  'fraction-upside-down': {
+    name: 'Writing the fraction the wrong way up',
+    faultyRule: '\\text{15 out of 40} = \\frac{40}{15}',
+    why: 'The whole goes on the bottom, because it is what is being split up. The part goes on top.',
+    topic: 's1-simplifying-fractions',
+    section: 'part-of-a-whole',
+  },
+  'fraction-mixed-units': {
+    name: 'Using different units on the top and the bottom',
+    faultyRule: '45 \\text{ cm of } 3 \\text{ m} = \\frac{45}{3}',
+    why: 'A fraction compares two amounts of the same kind of thing. Change both amounts into the same unit first.',
+    topic: 's1-simplifying-fractions',
+    section: 'part-of-a-whole',
+  },
   'add-numerators-and-denominators': {
     name: 'Adding the tops and the bottoms of fractions',
     faultyRule: '\\frac{a}{b} + \\frac{c}{d} = \\frac{a + c}{b + d}',

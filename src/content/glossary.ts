@@ -123,6 +123,13 @@ export const glossary = {
       'A denominator shared by two or more fractions. The lowest common denominator is the lowest common multiple of their denominators.',
     firstTaughtIn: 's1-fractions-equivalent',
   },
+  'simplest-form': {
+    term: 'simplest form',
+    definition:
+      'A fraction is in its simplest form when its numerator and denominator have no common factor other than 1. Also called lowest terms.',
+    example: '\\frac{18}{24} \\text{ in simplest form is } \\frac{3}{4}',
+    firstTaughtIn: 's1-simplifying-fractions',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',
