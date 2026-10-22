@@ -15,7 +15,8 @@ type Interpreted =
   | { t: 'node'; node: Node }
   | { t: 'values'; nodes: Node[] }
   | { t: 'intervals'; intervals: Interval[]; endpoints: Node[] }
-  | { t: 'tuples'; tuples: Node[][] };
+  | { t: 'tuples'; tuples: Node[][] }
+  | { t: 'ratio'; node: Node; parts: Node[] };
 
 interface Interval {
   lo: number;
@@ -34,13 +35,20 @@ const SUPPORTED = new Set([
   'inequality',
   'ordered-pairs',
   'formula',
+  'ratio',
 ]);
 
 const isConstant = (n: Node) =>
   variablesOf(n).size === 0 || [...variablesOf(n)].every((v) => v === 'e');
 
 function single(node: Node, what: string): Node {
-  if (node.k === 'rel' || node.k === 'list' || node.k === 'or' || node.k === 'pm') {
+  if (
+    node.k === 'rel' ||
+    node.k === 'list' ||
+    node.k === 'or' ||
+    node.k === 'pm' ||
+    node.k === 'ratio'
+  ) {
     throw new ShapeError(`Give a single ${what}.`);
   }
   if (node.k === 'text' || node.k === 'empty') throw new ShapeError(`Give a ${what}.`);
@@ -292,6 +300,25 @@ function sameTupleSets(a: Node[][], b: Node[][]): boolean {
   );
 }
 
+/* ---------- Ratios ---------- */
+
+function ratioParts(node: Node): Node[] {
+  if (node.k !== 'ratio') throw new ShapeError('Write the ratio with colons, for example 2 : 3.');
+  if (!node.parts.every(isConstant))
+    throw new ShapeError('Each part of the ratio should be a number.');
+  if (node.parts.some((p) => !(value(p) > 0)))
+    throw new ShapeError('Each part of the ratio should be a positive number.');
+  return node.parts;
+}
+
+/** Two ratios are equal when one is a multiple of the other: a₁ × b₀ = b₁ × a₀ for every part. */
+function sameRatio(a: Node[], b: Node[]): boolean {
+  if (a.length !== b.length) return false;
+  const [a0, b0] = [a[0] as Node, b[0] as Node];
+  const product = (x: Node, y: Node): Node => ({ k: 'mul', args: [x, y] });
+  return a.every((ai, i) => sameNumber(product(ai, b0), product(b[i] as Node, a0)));
+}
+
 /* ---------- Formulae ---------- */
 
 function formulaSide(node: Node, subject: string): Node {
@@ -328,6 +355,8 @@ function interpret(node: Node, spec: AnswerSpec, canonical: boolean): Interprete
       return { t: 'tuples', tuples: collectTuples(node, spec.variables ?? ['x', 'y']) };
     case 'formula':
       return { t: 'node', node: canonical ? node : formulaSide(node, spec.variable ?? 'y') };
+    case 'ratio':
+      return { t: 'ratio', node, parts: ratioParts(node) };
     default:
       throw new Error(`Answer kind '${spec.kind}' is not supported until its stage is built`);
   }
@@ -341,6 +370,7 @@ function same(a: Interpreted, b: Interpreted, spec: AnswerSpec): boolean {
   if (a.t === 'values' && b.t === 'values') return sameValueSets(a.nodes, b.nodes);
   if (a.t === 'intervals' && b.t === 'intervals') return sameIntervals(a.intervals, b.intervals);
   if (a.t === 'tuples' && b.t === 'tuples') return sameTupleSets(a.tuples, b.tuples);
+  if (a.t === 'ratio' && b.t === 'ratio') return sameRatio(a.parts, b.parts);
   return false;
 }
 
@@ -354,6 +384,8 @@ function formNodes(a: Interpreted): Node[] {
       return a.endpoints;
     case 'tuples':
       return a.tuples.flat();
+    case 'ratio':
+      return [a.node];
   }
 }
 

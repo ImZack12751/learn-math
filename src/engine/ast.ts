@@ -27,6 +27,8 @@ export type Node =
   | { k: 'pm'; left: Node; right: Node }
   | { k: 'rel'; op: RelOp; left: Node; right: Node }
   | { k: 'list'; items: Node[]; tuple: boolean }
+  /** A ratio such as 2 : 3 : 5. */
+  | { k: 'ratio'; parts: Node[] }
   | { k: 'or'; items: Node[] }
   | { k: 'text'; value: string }
   | { k: 'empty' };
@@ -202,6 +204,9 @@ export function fromMathJson(json: Json): Node {
     }
     case 'Or':
       return { k: 'or', items: args() };
+    case 'Colon':
+    case 'Ratio':
+      return { k: 'ratio', parts: args().flatMap((a) => (a.k === 'ratio' ? a.parts : [a])) };
   }
   const fn = FUNCTIONS[head];
   if (fn) return { k: 'fn', name: fn, arg: one() };
@@ -255,6 +260,8 @@ export function children(node: Node): Node[] {
     case 'list':
     case 'or':
       return node.items;
+    case 'ratio':
+      return node.parts;
   }
 }
 

@@ -103,6 +103,8 @@ describe('plain-text input', () => {
     ['pi r^2', '\\pi r^{2}'],
     ['xy', 'xy'],
     ['no solution', '\\varnothing'],
+    ['2:3', '2 : 3'],
+    ['4 : 6 : 10', '4 : 6 : 10'],
   ];
   it.each(cases)('%s → %s', (plain, latex) => {
     expect(plainToLatex(plain)).toBe(latex);

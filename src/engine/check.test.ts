@@ -162,6 +162,55 @@ describe('numbers', () => {
   });
 });
 
+describe('whole numbers and prime factorisations', () => {
+  it('asks for a whole number as written, not a calculation', () => {
+    expectVerdict(num('-12', ['integer']), [
+      ['-12', 'correct'],
+      ['-3 \\times 4', 'right-value-wrong-form'],
+      ['-(-(-12))', 'right-value-wrong-form'],
+      ['12', 'incorrect'],
+    ]);
+  });
+
+  it('accepts a product of primes, with or without exponents', () => {
+    expectVerdict(num('2^{3} \\times 3^{2}', ['prime-factorisation']), [
+      ['2^{3} \\times 3^{2}', 'correct'],
+      ['3^{2} \\times 2^{3}', 'correct'],
+      ['2 \\times 2 \\times 2 \\times 3 \\times 3', 'correct'],
+      ['8 \\times 9', 'right-value-wrong-form'],
+      ['72', 'right-value-wrong-form'],
+      ['2^{3} \\times 3', 'incorrect'],
+    ]);
+    expectVerdict(num('13', ['prime-factorisation']), [['13', 'correct']]);
+  });
+});
+
+describe('ratios', () => {
+  const ratio = (canonical: string, form: FormRequirement[] = []): AnswerSpec => ({
+    kind: 'ratio',
+    canonical,
+    form,
+  });
+
+  it('compares ratios by proportion and checks the simplest form', () => {
+    expectVerdict(ratio('2 : 3', ['simplest-ratio']), [
+      ['2 : 3', 'correct'],
+      ['2:3', 'correct'],
+      ['4 : 6', 'right-value-wrong-form'],
+      ['1 : 1.5', 'right-value-wrong-form'],
+      ['3 : 2', 'incorrect'],
+      ['\\frac{2}{3}', 'incorrect'],
+      ['2 : 3 : 1', 'incorrect'],
+      ['0 : 0', 'incorrect'],
+    ]);
+    expectVerdict(ratio('3 : 1 : 5', ['simplest-ratio']), [
+      ['3 : 1 : 5', 'correct'],
+      ['6 : 2 : 10', 'right-value-wrong-form'],
+      ['3 : 5 : 1', 'incorrect'],
+    ]);
+  });
+});
+
 describe('expressions', () => {
   it('accepts equivalent rewrites: reordering, factored or expanded, exponent or radical', () => {
     expectVerdict(expr('x^{2} - x - 6'), [

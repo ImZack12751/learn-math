@@ -34,7 +34,11 @@ export type FormRequirement =
   | 'power-term'
   | 'exponent-form'
   | 'radical-form'
-  | 'standard-form';
+  | 'standard-form'
+  /** A ratio of whole numbers with no common factor: 2 : 3, not 4 : 6. */
+  | 'simplest-ratio'
+  /** A product of primes, repeated or with exponents: 2^{3} \times 3. */
+  | 'prime-factorisation';
 
 export type AnswerKind =
   | 'number'
@@ -43,6 +47,8 @@ export type AnswerKind =
   | 'inequality'
   | 'ordered-pairs'
   | 'formula'
+  /** Two or more positive parts, equal when proportional (2 : 3 = 4 : 6). */
+  | 'ratio'
   // Designed for later stages; the checker reports them as unsupported until their stage is built.
   | 'interval'
   | 'point'

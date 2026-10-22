@@ -190,6 +190,7 @@ export function compile(node: Node, variables: ReadonlySet<string> = new Set()):
     case 'pm':
     case 'rel':
     case 'list':
+    case 'ratio':
     case 'or':
     case 'text':
     case 'empty':

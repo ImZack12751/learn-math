@@ -1,7 +1,7 @@
 /**
  * Plain-text answers (the fallback input) to LaTeX. Accepts what people type on a keyboard:
  * `x^(1/2)`, `sqrt(12)`, `2/4`, `3x+2`, `-2<x<=3`, `x=2 or x=-3`, `(2,3)`, `log_2(8)`, `|x-1|`,
- * `2 1/3` for a mixed number. Implicit multiplication binds like explicit multiplication, left to
+ * `2 1/3` for a mixed number, `2:3` for a ratio. Implicit multiplication binds like explicit multiplication, left to
  * right, so `1/2x` means one half of x; the live preview shows the reading.
  */
 import { ParseError, type Node, type RelOp, num } from './ast';
@@ -71,7 +71,7 @@ function tokenize(input: string): Token[] {
       i += word[0].length;
       continue;
     }
-    if ('+-*/^()[],=<>|±_'.includes(ch)) {
+    if ('+-*/^()[],=<>|±_:'.includes(ch)) {
       tokens.push({ t: 'op', v: ch });
       i++;
       continue;
@@ -110,12 +110,21 @@ class Parser {
   }
 
   private list(): Node {
-    const items = [this.or()];
+    const items = [this.ratio()];
     while (this.isOp(',')) {
       this.i++;
-      items.push(this.or());
+      items.push(this.ratio());
     }
     return items.length === 1 ? (items[0] as Node) : { k: 'list', items, tuple: false };
+  }
+
+  private ratio(): Node {
+    const parts = [this.or()];
+    while (this.isOp(':')) {
+      this.i++;
+      parts.push(this.or());
+    }
+    return parts.length === 1 ? (parts[0] as Node) : { k: 'ratio', parts };
   }
 
   private or(): Node {

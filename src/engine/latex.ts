@@ -117,6 +117,8 @@ export function toLatex(node: Node): string {
       const body = node.items.map(toLatex).join(', ');
       return node.tuple ? paren(body) : body;
     }
+    case 'ratio':
+      return node.parts.map(toLatex).join(' : ');
     case 'or':
       return node.items.map(toLatex).join(' \\text{ or } ');
     case 'text':

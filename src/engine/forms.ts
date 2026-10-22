@@ -261,7 +261,7 @@ function factorisedIssue(node: Node): string | null {
 export function formIssue(req: FormRequirement, node: Node): string | null {
   switch (req) {
     case 'integer':
-      return isIntLiteral(stripNeg(node)) ? null : 'Give a whole number.';
+      return isIntLiteral(node.k === 'neg' ? node.arg : node) ? null : 'Give a whole number.';
     case 'simplified-fraction':
       return fractionForm(node, true, false);
     case 'improper-fraction':
@@ -269,7 +269,7 @@ export function formIssue(req: FormRequirement, node: Node): string | null {
     case 'mixed-number':
       return fractionForm(node, true, true);
     case 'decimal': {
-      const n = stripNeg(node);
+      const n = node.k === 'neg' ? node.arg : node;
       return n.k === 'num' && !n.text.includes('(') ? null : 'Give the answer as a decimal.';
     }
     case 'collected':
@@ -302,7 +302,45 @@ export function formIssue(req: FormRequirement, node: Node): string | null {
         : null;
     case 'standard-form':
       return standardFormIssue(node);
+    case 'simplest-ratio':
+      return simplestRatioIssue(node);
+    case 'prime-factorisation':
+      return primeFactorisationIssue(node);
   }
+}
+
+function simplestRatioIssue(node: Node): string | null {
+  if (node.k !== 'ratio') return 'Write the answer as a ratio, such as 2 : 3.';
+  if (!node.parts.every(isIntLiteral)) return 'Write every part of the ratio as a whole number.';
+  const common = node.parts.reduce((g, p) => gcd(g, p.k === 'num' ? p.q.n : 1n), 0n);
+  return common === 1n ? null : 'The parts still have a common factor: divide them all by it.';
+}
+
+function isPrime(n: bigint): boolean {
+  if (n < 2n) return false;
+  for (let p = 2n; p * p <= n; p++) if (n % p === 0n) return false;
+  return true;
+}
+
+/** A prime as written, or a prime to a whole-number power. */
+function isPrimePower(n: Node): boolean {
+  if (n.k === 'num') return isIntLiteral(n) && isPrime(n.q.n);
+  return (
+    n.k === 'pow' &&
+    n.base.k === 'num' &&
+    isIntLiteral(n.base) &&
+    isPrime(n.base.q.n) &&
+    isIntLiteral(n.exp) &&
+    exact(n.exp)?.isInteger === true &&
+    (exact(n.exp)?.n ?? 0n) >= 1n
+  );
+}
+
+function primeFactorisationIssue(node: Node): string | null {
+  const factors = node.k === 'mul' ? node.args : [node];
+  return factors.every(isPrimePower)
+    ? null
+    : 'Write the number as a product of prime numbers only, such as 2 cubed times 3.';
 }
 
 /** k·xⁿ: an optional number times one letter, or one power of one letter. */
