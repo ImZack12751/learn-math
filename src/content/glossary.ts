@@ -103,6 +103,26 @@ export const glossary = {
     example: '\\text{LCM of } 6 \\text{ and } 8 \\text{ is } 24',
     firstTaughtIn: 's1-factors-multiples-primes',
   },
+  fraction: {
+    term: 'fraction',
+    definition:
+      'A number written as one whole number over another. The bottom says how many equal pieces the whole is cut into; the top says how many of those pieces there are.',
+    example: '\\frac{3}{4}',
+    firstTaughtIn: 's1-fractions-equivalent',
+  },
+  'equivalent-fractions': {
+    term: 'equivalent fractions',
+    definition:
+      'Fractions that are written differently but have the same value, such as one half and two quarters. Multiplying or dividing the top and the bottom by the same number gives an equivalent fraction.',
+    example: '\\frac{1}{2} = \\frac{2}{4} = \\frac{3}{6}',
+    firstTaughtIn: 's1-fractions-equivalent',
+  },
+  'common-denominator': {
+    term: 'common denominator',
+    definition:
+      'A denominator shared by two or more fractions. The lowest common denominator is the lowest common multiple of their denominators.',
+    firstTaughtIn: 's1-fractions-equivalent',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

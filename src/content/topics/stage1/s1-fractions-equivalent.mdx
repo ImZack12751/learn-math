@@ -1,0 +1,117 @@
+<WhyItMatters>
+
+Fractions describe amounts that are not whole: half a litre, three quarters of an hour, two fifths of a class. They are also the way division is written for the rest of this course, from simple sharing to algebraic fractions and calculus.
+
+This topic builds the one idea every fraction skill depends on: the same amount can be written as many different fractions, and multiplying or dividing the top and the bottom by the same number moves between them.
+
+</WhyItMatters>
+
+<Explanation>
+
+<Section id="parts-of-a-whole" title="A fraction is a number of equal parts">
+
+Cut a whole into 4 equal pieces and take 3 of them. That amount is the <Term id="fraction" /> three quarters:
+
+<FractionBar bars={[[3, 4]]} />
+
+$$
+\frac{3}{4}
+$$
+
+The bottom number, the <Term id="denominator" />, says how many equal pieces the whole is cut into. It names the size of each piece. The top number, the <Term id="numerator" />, counts how many of those pieces there are.
+
+The pieces must be equal. A cake cut into 4 uneven slices does not give quarters.
+
+A fraction is also a division. Sharing 3 pizzas equally between 4 people gives each person three quarters of a pizza, so $\frac{3}{4}$ means $3 \div 4$. Because of this, a fraction with the same top and bottom is one whole, and a fraction with denominator 1 is a whole number:
+
+<Claim display tex="\frac{4}{4} = 1" />
+
+<Claim display tex="\frac{5}{1} = 5" />
+
+</Section>
+
+<Section id="equivalent-fractions" title="Equivalent fractions">
+
+Take one half of a bar. Now cut every piece in two. There are twice as many pieces, each half the size, and the shaded amount has not changed:
+
+<FractionBar bars={[[1, 2], [2, 4], [4, 8]]} />
+
+<Claim display tex="\frac{1}{2} = \frac{2}{4} = \frac{4}{8}" />
+
+Fractions that are equal in value are called <Term id="equivalent-fractions" />. Cutting each piece into 3 multiplies both the number of pieces in the whole and the number of shaded pieces by 3. So multiplying the numerator and the denominator by the same number always gives an equivalent fraction:
+
+<Claim display tex="\frac{2}{3} = \frac{2 \times 4}{3 \times 4} = \frac{8}{12}" />
+
+Joining pieces back together does the reverse: dividing the top and the bottom by the same number also gives an equivalent fraction:
+
+<Claim display tex="\frac{10}{15} = \frac{10 \div 5}{15 \div 5} = \frac{2}{3}" />
+
+<Callout kind="idea">
+
+Multiply or divide the numerator and the denominator by the same number, and the value of the fraction stays the same.
+
+</Callout>
+
+To find a missing number, work out what one part has been multiplied by, then do the same to the other. In $\frac{3}{4} = \frac{\square}{20}$, the denominator 4 has become 20, which is 4 times 5, so the numerator becomes 3 times 5:
+
+<Claim display tex="\frac{3}{4} = \frac{15}{20}" />
+
+<Misconception id="add-same-to-top-and-bottom" />
+
+</Section>
+
+<Section id="comparing" title="Comparing fractions">
+
+When two fractions have the same denominator, their pieces are the same size, so the one with more pieces is bigger:
+
+<Claim display tex="\frac{3}{7} < \frac{5}{7}" />
+
+When they have the same numerator, compare the size of the pieces instead. Cutting a whole into more pieces makes each piece smaller:
+
+<Claim display tex="\frac{1}{8} < \frac{1}{4}" />
+
+<Misconception id="larger-denominator-larger-fraction" />
+
+Otherwise, rewrite both fractions with a <Term id="common-denominator" />. The lowest one is the lowest common multiple of the two denominators, from <Prereq id="s1-factors-multiples-primes" />. To compare three quarters and four fifths, use twentieths:
+
+<Claim display tex="\frac{3}{4} = \frac{15}{20}" />
+
+<Claim display tex="\frac{4}{5} = \frac{16}{20}" />
+
+Now the pieces are the same size, and 16 is more than 15:
+
+<Claim display tex="\frac{3}{4} < \frac{4}{5}" />
+
+</Section>
+
+</Explanation>
+
+<WorkedExamples>
+
+<WorkedExample id="fe-missing" title="A missing numerator" />
+
+<WorkedExample id="fe-missing-wrong" title="Where the same amount is added" />
+
+<WorkedExample id="fe-missing-two-steps" title="Finish this one" />
+
+<WorkedExample id="fe-compare" title="Comparing with a common denominator" />
+
+<WorkedExample id="fe-compare-own" title="Compare these, on your own" />
+
+</WorkedExamples>
+
+<Practice />
+
+<Takeaways>
+
+- In a fraction, the denominator says how many equal pieces make the whole, and the numerator counts the pieces.
+- A fraction is a division: $\frac{a}{b}$ means $a \div b$.
+- Multiplying or dividing the top and the bottom by the same number gives an equivalent fraction. Adding the same number to both does not.
+- With the same denominator, the bigger numerator is the bigger fraction. With the same numerator, the bigger denominator is the smaller fraction.
+- To compare any two fractions, rewrite them with a common denominator, the LCM of the denominators.
+
+</Takeaways>
+
+<NextUp />
+
+<CheckYourself />

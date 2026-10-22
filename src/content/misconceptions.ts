@@ -66,6 +66,20 @@ export const misconceptions = {
     topic: 's1-factors-multiples-primes',
     section: 'hcf-and-lcm',
   },
+  'add-same-to-top-and-bottom': {
+    name: 'Adding the same number to the top and the bottom',
+    faultyRule: '\\frac{a}{b} = \\frac{a + n}{b + n}',
+    why: 'Equivalent fractions come from multiplying or dividing the top and the bottom by the same number. Adding the same amount to both changes the size of the fraction.',
+    topic: 's1-fractions-equivalent',
+    section: 'equivalent-fractions',
+  },
+  'larger-denominator-larger-fraction': {
+    name: 'Thinking a bigger denominator means a bigger fraction',
+    faultyRule: '\\frac{1}{8} > \\frac{1}{4}',
+    why: 'The denominator counts how many pieces the whole is cut into. More pieces means smaller pieces.',
+    topic: 's1-fractions-equivalent',
+    section: 'comparing',
+  },
   'add-numerators-and-denominators': {
     name: 'Adding the tops and the bottoms of fractions',
     faultyRule: '\\frac{a}{b} + \\frac{c}{d} = \\frac{a + c}{b + d}',
