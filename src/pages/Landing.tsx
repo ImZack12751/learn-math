@@ -12,6 +12,7 @@ import { ButtonLink, buttonClass } from '../ui/primitives/Button';
 import { CountUp } from '../ui/primitives/CountUp';
 import { Eyebrow } from '../ui/primitives/Eyebrow';
 import { Icon, type IconName } from '../ui/primitives/Icon';
+import { Meter } from '../ui/primitives/Meter';
 import { Panel } from '../ui/primitives/Panel';
 import { ProgressArc } from '../ui/primitives/ProgressArc';
 
@@ -59,7 +60,7 @@ export function Landing() {
             </ButtonLink>
           )}
           <a href="#stages" className={buttonClass('ghost', 'glass')}>
-            See all nine stages
+            See every stage and topic
           </a>
         </div>
       </section>
@@ -97,6 +98,8 @@ export function Landing() {
         </Panel>
       </section>
 
+      <BuildProgress />
+
       <section id="stages" aria-labelledby="stages-title" className="scroll-mt-28 py-24">
         <Eyebrow>The route</Eyebrow>
         <div className="scrim mt-4 max-w-2xl">
@@ -111,6 +114,52 @@ export function Landing() {
         </ol>
       </section>
     </div>
+  );
+}
+
+const ready = (stage: StageEntry) => stage.topics.filter((t) => availableTopics.has(t.id)).length;
+
+/** How much of the course is written so far: lessons ready, stage by stage. */
+function BuildProgress() {
+  const building = stages.filter((s) => s.id <= BUILD_SCOPE);
+  const total = building.reduce((n, s) => n + s.topics.length, 0);
+  const done = building.reduce((n, s) => n + ready(s), 0);
+  return (
+    <section aria-labelledby="build-title" className="mt-3">
+      <Panel className="grid gap-6 p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+        <div>
+          <p className="label-mono flex items-center gap-2">
+            <Icon name="book" className="text-sm" />
+            Lessons written
+          </p>
+          <h2 id="build-title" className="mt-2 font-display text-3xl text-fg">
+            {done} of {total} lessons ready
+          </h2>
+          <p className="mt-1 text-sm text-fg-muted">
+            Stages 1 to {BUILD_SCOPE} are being written now. Every example and answer in a lesson is
+            checked by code before it appears here. Stages {BUILD_SCOPE + 1} to {stages.length}{' '}
+            follow.
+          </p>
+        </div>
+        <ul className="space-y-3 self-center">
+          {building.map((stage) => (
+            <li
+              key={stage.id}
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1"
+            >
+              <a href={`#stage-${stage.id}`} className="text-sm text-fg hover:underline">
+                Stage {stage.id} · {stage.title}
+              </a>
+              <Meter
+                value={ready(stage) / stage.topics.length}
+                label={`Stage ${stage.id} lessons ready`}
+                valueText={`${ready(stage)} of ${stage.topics.length}`}
+              />
+            </li>
+          ))}
+        </ul>
+      </Panel>
+    </section>
   );
 }
 
@@ -150,12 +199,15 @@ function StageCard({ stage, index, mastery }: StageCardProps) {
   const listId = useId();
   const total = stage.topics.length;
   const done = stage.topics.filter((t) => (mastery.get(t.id) ?? 0) >= 0.9).length;
+  const written = ready(stage);
   const status =
     stage.id <= BUILD_SCOPE ? 'In progress' : stage.optional ? 'Optional · planned' : 'Planned';
   const lead = stage.topics[0];
 
   return (
     <motion.li
+      id={`stage-${stage.id}`}
+      className="scroll-mt-28"
       initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
@@ -181,7 +233,7 @@ function StageCard({ stage, index, mastery }: StageCardProps) {
         </div>
         <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-3">
           <span className="font-mono text-xs text-fg-faint tabular-nums">
-            {done}/{total} mastered
+            {written}/{total} ready · {done} mastered
             {stage.prerequisiteStages.length > 0 &&
               ` · after stage ${stage.prerequisiteStages.join(' and ')}`}
           </span>
@@ -207,7 +259,7 @@ function StageCard({ stage, index, mastery }: StageCardProps) {
               <li key={topic.id}>
                 <Link
                   to={`/topic/${topic.id}`}
-                  className="group flex min-h-11 items-center gap-3 rounded-lg px-3 py-1.5 text-sm text-fg-muted hover:text-fg"
+                  className={`group flex min-h-11 items-center gap-3 rounded-lg px-3 py-1.5 text-sm hover:text-fg ${availableTopics.has(topic.id) ? 'text-fg' : 'text-fg-muted'}`}
                 >
                   <span className="w-6 font-mono text-xs text-fg-faint tabular-nums">
                     {String(i + 1).padStart(2, '0')}
