@@ -130,6 +130,26 @@ export const glossary = {
     example: '\\frac{18}{24} \\text{ in simplest form is } \\frac{3}{4}',
     firstTaughtIn: 's1-simplifying-fractions',
   },
+  'proper-fraction': {
+    term: 'proper fraction',
+    definition:
+      'A fraction whose numerator is smaller than its denominator, so its value is less than 1.',
+    example: '\\frac{3}{4}',
+    firstTaughtIn: 's1-mixed-numbers',
+  },
+  'improper-fraction': {
+    term: 'improper fraction',
+    definition:
+      'A fraction whose numerator is equal to or bigger than its denominator, so its value is at least 1.',
+    example: '\\frac{11}{4}',
+    firstTaughtIn: 's1-mixed-numbers',
+  },
+  'mixed-number': {
+    term: 'mixed number',
+    definition: 'A whole number and a proper fraction written together, meaning their sum.',
+    example: '2\\frac{3}{4} = 2 + \\frac{3}{4}',
+    firstTaughtIn: 's1-mixed-numbers',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

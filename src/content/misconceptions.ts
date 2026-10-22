@@ -143,6 +143,20 @@ export const misconceptions = {
     topic: 's1-multiply-divide-fractions',
     section: 'dividing',
   },
+  'mixed-to-improper-add': {
+    name: 'Adding the whole number to the numerator',
+    faultyRule: '2\\frac{3}{4} = \\frac{2 + 3}{4}',
+    why: 'Each whole is worth as many pieces as the denominator, so the whole number must be multiplied by the denominator before the numerator is added.',
+    topic: 's1-mixed-numbers',
+    section: 'converting',
+  },
+  'multiply-mixed-parts-separately': {
+    name: 'Multiplying the whole numbers and the fractions separately',
+    faultyRule: '1\\frac{1}{2} \\times 2\\frac{1}{3} = 2\\frac{1}{6}',
+    why: 'A mixed number is a sum, a whole number plus a fraction. Multiplying two sums needs every part times every part, so convert to improper fractions instead.',
+    topic: 's1-mixed-numbers',
+    section: 'calculating',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
