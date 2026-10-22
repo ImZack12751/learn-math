@@ -189,6 +189,18 @@ export const glossary = {
       'Two quantities are in direct proportion when multiplying one by a number multiplies the other by the same number. Twice as many items cost twice as much.',
     firstTaughtIn: 's1-ratio-proportion',
   },
+  rate: {
+    term: 'rate',
+    definition:
+      'A comparison of two quantities with different units, such as kilometres per hour or pounds per kilogram. Per means for each.',
+    firstTaughtIn: 's1-rates-units',
+  },
+  speed: {
+    term: 'speed',
+    definition:
+      'How far something travels in each unit of time. Speed equals distance divided by time, measured for example in kilometres per hour (km/h).',
+    firstTaughtIn: 's1-rates-units',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

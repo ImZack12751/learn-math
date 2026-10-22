@@ -227,6 +227,27 @@ export const misconceptions = {
     topic: 's1-ratio-proportion',
     section: 'direct-proportion',
   },
+  'convert-wrong-direction': {
+    name: 'Converting units the wrong way',
+    faultyRule: '3.5 \\text{ km} = 3.5 \\div 1000 \\text{ m}',
+    why: 'A smaller unit fits more times into the same length, so the number gets bigger: multiply. Going to a bigger unit, divide.',
+    topic: 's1-rates-units',
+    section: 'converting-units',
+  },
+  'speed-formula-mixed-up': {
+    name: 'Mixing up the speed, distance and time formulas',
+    faultyRule: '\\text{speed} = \\text{distance} \\times \\text{time}',
+    why: 'Speed is the distance covered in each unit of time, so it is distance divided by time. Check the units: kilometres per hour means kilometres divided by hours.',
+    topic: 's1-rates-units',
+    section: 'speed',
+  },
+  'minutes-as-decimal-hours': {
+    name: 'Writing minutes as the decimal part of an hour',
+    faultyRule: '1 \\text{ h } 30 \\text{ min} = 1.30 \\text{ h}',
+    why: 'An hour has 60 minutes, not 100. Thirty minutes is half an hour, so 1 hour 30 minutes is 1.5 hours.',
+    topic: 's1-rates-units',
+    section: 'time-in-hours',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
