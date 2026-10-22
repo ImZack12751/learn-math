@@ -1,0 +1,109 @@
+<WhyItMatters>
+
+A calculator does exactly what you type, mistakes included. A quick estimate tells you roughly what the answer should be, so a slip such as a misplaced decimal point stands out at once.
+
+Rounding is also how measured and calculated values are reported sensibly: nobody needs a length to eight decimal places. From here on, answers that are not exact are given to a stated number of decimal places or significant figures.
+
+</WhyItMatters>
+
+<Explanation>
+
+<Section id="rounding" title="Rounding">
+
+<Term id="rounding" /> replaces a number with a nearby, simpler one. To round 4567 to the nearest hundred, ask which hundreds it lies between: 4500 and 4600. It is nearer 4600, so
+
+$$
+4567 \approx 4600
+$$
+
+The sign $\approx$ means "is approximately equal to".
+
+The method: find the last digit you are keeping, then look at the next digit. If it is 5 or more, round up; if it is 4 or less, keep the digit as it is. Then replace the dropped digits of a whole number with zeros, so the number keeps its size.
+
+<Misconception id="round-drop-place-value" />
+
+Rounding to <Term id="decimal-places" /> works the same way, counting digits after the point. To round 3.476 to 2 decimal places, keep the digits up to the 7. The next digit is 6, which is 5 or more, so the 7 goes up to 8:
+
+$$
+3.476 \approx 3.48
+$$
+
+<Misconception id="round-truncate" />
+
+<Callout kind="note">
+
+A number exactly halfway, such as 2.5 rounded to the nearest whole number, is rounded up, to 3. That is the usual convention.
+
+</Callout>
+
+</Section>
+
+<Section id="significant-figures" title="Significant figures">
+
+<Term id="significant-figures" /> count digits from the first non-zero digit, wherever it is. They measure how precisely a number is given, whatever its size.
+
+In 0.04567 the zeros at the start only place the digits; the first significant figure is the 4. So to 2 significant figures:
+
+$$
+0.04567 \approx 0.046
+$$
+
+For a large number, the first significant figure is the first digit. To 2 significant figures, 89 066 keeps its 8 and 9, and the rest become zeros:
+
+$$
+89\,066 \approx 89\,000
+$$
+
+<Misconception id="sf-count-leading-zeros" />
+
+</Section>
+
+<Section id="estimating" title="Estimating a calculation">
+
+To <Term id="estimate" /> a calculation, round every number to 1 significant figure, then calculate with the rounded numbers. They are simple enough to work with in your head:
+
+<Claim display tex="\frac{500 \times 30}{100} = 150" />
+
+That is the estimate for $\frac{534 \times 29}{98.4}$. It shows that the exact answer is in the low hundreds, not the tens or the thousands.
+
+Dividing by a number less than 1 makes the answer bigger. Dividing by 0.5 asks how many halves fit in, and there are two in every whole:
+
+<Claim display tex="30 \div 0.5 = 60" />
+
+<Misconception id="dividing-always-makes-smaller" />
+
+Use an estimate as a sense-check. If a calculator gave an answer in the thousands for the calculation above, the estimate would tell you a mistake had been made somewhere, such as a misplaced decimal point.
+
+</Section>
+
+</Explanation>
+
+<WorkedExamples>
+
+<WorkedExample id="est-dp" title="Rounding to decimal places" />
+
+<WorkedExample id="est-power-wrong" title="Where the zeros are left out" />
+
+<WorkedExample id="est-sf" title="Finish this one" />
+
+<WorkedExample id="est-estimate" title="Estimating a calculation" />
+
+<WorkedExample id="est-own" title="An estimate, on your own" />
+
+</WorkedExamples>
+
+<Practice />
+
+<Takeaways>
+
+- To round, find the last digit kept and look at the next digit: 5 or more rounds up, 4 or less keeps the digit.
+- When rounding a whole number, fill the dropped places with zeros so the number keeps its size.
+- Decimal places count digits after the point. Significant figures count from the first non-zero digit.
+- To estimate, round every number to 1 significant figure, then calculate.
+- Dividing by a number less than 1 makes a number bigger. Use estimates to catch mistakes.
+
+</Takeaways>
+
+<NextUp />
+
+<CheckYourself />

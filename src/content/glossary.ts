@@ -201,6 +201,31 @@ export const glossary = {
       'How far something travels in each unit of time. Speed equals distance divided by time, measured for example in kilometres per hour (km/h).',
     firstTaughtIn: 's1-rates-units',
   },
+  rounding: {
+    term: 'rounding',
+    definition:
+      'Replacing a number with a simpler one that is close to it, keeping only some of its digits. If the first digit dropped is 5 or more, the last kept digit goes up by one.',
+    example: '3.476 \\approx 3.48',
+    firstTaughtIn: 's1-estimation',
+  },
+  'decimal-places': {
+    term: 'decimal places',
+    definition: 'The number of digits after the decimal point. 3.48 has two decimal places.',
+    firstTaughtIn: 's1-estimation',
+  },
+  'significant-figures': {
+    term: 'significant figures',
+    definition:
+      'The digits of a number counted from the first non-zero digit. In 0.04567 the first significant figure is the 4.',
+    example: '0.04567 \\approx 0.046 \\text{ to 2 significant figures}',
+    firstTaughtIn: 's1-estimation',
+  },
+  estimate: {
+    term: 'estimate',
+    definition:
+      'An approximate answer found by rounding the numbers first, used to check that an exact answer is sensible.',
+    firstTaughtIn: 's1-estimation',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',
