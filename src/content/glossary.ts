@@ -164,6 +164,18 @@ export const glossary = {
     example: '0.375 = \\frac{375}{1000}',
     firstTaughtIn: 's1-decimals',
   },
+  percentage: {
+    term: 'percentage',
+    definition: 'A number of hundredths, written with the sign %. Per cent means out of a hundred.',
+    example: '35\\% = \\frac{35}{100} = 0.35',
+    firstTaughtIn: 's1-percentages',
+  },
+  multiplier: {
+    term: 'multiplier',
+    definition:
+      'The single number you multiply by to make a percentage change. An increase of 15% has multiplier 1.15; a decrease of 15% has multiplier 0.85.',
+    firstTaughtIn: 's1-percentages',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

@@ -185,6 +185,27 @@ export const misconceptions = {
     topic: 's1-decimals',
     section: 'multiplying-decimals',
   },
+  'percentage-as-number': {
+    name: 'Using the percentage as an ordinary number',
+    faultyRule: '35\\% \\text{ of } 80 = 35 \\times 80',
+    why: 'Per cent means out of a hundred, so 35% is 35 hundredths. Divide by 100 before multiplying.',
+    topic: 's1-percentages',
+    section: 'percentage-of-an-amount',
+  },
+  'percent-change-add-percent': {
+    name: 'Adding the percentage as if it were an amount',
+    faultyRule: '80 \\text{ increased by } 15\\% = 80 + 15',
+    why: 'A percentage change is a fraction of the original amount, not a fixed number. Find 15% of 80 first, or multiply by the multiplier 1.15.',
+    topic: 's1-percentages',
+    section: 'increase-and-decrease',
+  },
+  'reverse-percentage-of-new': {
+    name: 'Taking the percentage of the new amount to undo a change',
+    faultyRule: '\\text{original} = 72 - 20\\% \\text{ of } 72',
+    why: 'The change was a percentage of the original, which is unknown. Divide the new amount by the multiplier to undo the change exactly.',
+    topic: 's1-percentages',
+    section: 'reverse-percentages',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
