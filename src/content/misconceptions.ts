@@ -59,12 +59,26 @@ export const misconceptions = {
     topic: 's1-add-subtract-fractions',
     section: 'common-denominators',
   },
+  'left-to-right-ignoring-precedence': {
+    name: 'Working strictly from left to right',
+    faultyRule: '2 + 3 \\times 4 = 5 \\times 4 = 20',
+    why: 'Multiplication is done before addition, wherever it appears: 3 times 4 is a single amount that is then added to 2.',
+    topic: 's1-order-of-operations',
+    section: 'the-order',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
     why: 'An exponent counts how many times the base is multiplied by itself, not what to multiply it by.',
-    topic: 's2-exponent-laws',
-    section: 'what-an-exponent-means',
+    topic: 's1-order-of-operations',
+    section: 'powers',
+  },
+  'minus-sign-and-powers': {
+    name: 'Mixing up a negative base with a minus sign in front of a power',
+    faultyRule: '-3^{2} = \\left(-3\\right)^{2}',
+    why: 'Without brackets the power belongs to the number only, and the minus sign is applied afterwards. With brackets the minus sign is part of the base.',
+    topic: 's1-order-of-operations',
+    section: 'powers-and-negatives',
   },
   'add-exponents-different-bases': {
     name: 'Adding exponents when the bases differ',

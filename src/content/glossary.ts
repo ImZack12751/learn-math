@@ -58,6 +58,13 @@ export const glossary = {
     example: '\\text{the quotient of } 12 \\text{ and } 4 \\text{ is } 3',
     firstTaughtIn: 's1-negative-operations',
   },
+  'order-of-operations': {
+    term: 'order of operations',
+    definition:
+      'The agreed order for working out a calculation: brackets, then powers, then multiplication and division from left to right, then addition and subtraction from left to right.',
+    example: '2 + 3 \\times 4 = 2 + 12 = 14',
+    firstTaughtIn: 's1-order-of-operations',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

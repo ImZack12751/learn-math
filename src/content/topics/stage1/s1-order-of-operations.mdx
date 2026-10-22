@@ -1,0 +1,114 @@
+<WhyItMatters>
+
+A calculation written on one line, such as $2 + 3 \times 4$, must mean the same thing to everyone who reads it. Without an agreed order, one person would get 20 and another 14, and every formula in science, finance and the rest of this course would be ambiguous.
+
+This topic sets out that agreed order and the reason behind each part of it. It also introduces powers, a short way to write repeated multiplication that you will use from here to the end of calculus.
+
+</WhyItMatters>
+
+<Explanation>
+
+<Section id="powers" title="Powers: repeated multiplication">
+
+Repeated addition has a short name: $3 + 3 + 3 + 3$ is $4 \times 3$. Repeated multiplication has one too. Four copies of 3 multiplied together are written as a <Term id="power" />:
+
+<Claim display tex="3^{4} = 3 \times 3 \times 3 \times 3 = 81" />
+
+The number being multiplied, 3, is the <Term id="base" />. The small raised number, 4, is the <Term id="exponent" />: it counts how many copies of the base are multiplied. We read $3^{4}$ as "3 to the power 4".
+
+Two powers have their own names, from the shapes they measure. A square with sides of 5 units has area $5^{2}$, read "5 squared". A cube with edges of 2 units has volume $2^{3}$, read "2 cubed":
+
+<Claim display tex="5^{2} = 5 \times 5 = 25" />
+
+<Claim display tex="2^{3} = 2 \times 2 \times 2 = 8" />
+
+<Misconception id="multiply-base-by-exponent" />
+
+</Section>
+
+<Section id="the-order" title="The agreed order">
+
+When a calculation has more than one operation, work in this order:
+
+1. **Brackets**: anything inside brackets is worked out first.
+2. **Powers**.
+3. **Multiplication and division**, from left to right.
+4. **Addition and subtraction**, from left to right.
+
+This is the <Term id="order-of-operations" />. You may have met the memory aids BIDMAS or BODMAS; they name the same order.
+
+Why this order? Each step undoes a shorthand. A power is short for a multiplication, and a multiplication is short for an addition. So $2 + 3 \times 4$ means 2 plus three lots of 4. The three lots of 4 are one amount, 12, and that amount is what gets added:
+
+<Claim display tex="2 + 3 \times 4 = 2 + 12 = 14" />
+
+If you want the addition done first, brackets say so:
+
+<Claim display tex="\left(2 + 3\right) \times 4 = 5 \times 4 = 20" />
+
+<Misconception id="left-to-right-ignoring-precedence" />
+
+Multiplication and division have equal rank, so they are done in the order they appear, from left to right. The same goes for addition and subtraction:
+
+<Claim display tex="12 \div 2 \times 3 = 6 \times 3 = 18" />
+
+<Claim display tex="10 - 4 + 3 = 6 + 3 = 9" />
+
+<Callout kind="warning">
+
+Multiplication does not come before division just because the memory aid lists it first. Equal-ranked operations are done from left to right. Doing $2 \times 3$ first in $12 \div 2 \times 3$ would give 2, which is wrong.
+
+</Callout>
+
+A longer example, one operation per line:
+
+<Claim display tex="4 \times 3^{2} - 10 \div 2 = 4 \times 9 - 10 \div 2 = 36 - 5 = 31" />
+
+</Section>
+
+<Section id="powers-and-negatives" title="Powers of negative numbers">
+
+From <Prereq id="s1-negative-operations" />, two negatives multiply to give a positive. So a negative base raised to an even power is positive, and to an odd power is negative:
+
+<Claim display tex="\left(-3\right)^{2} = \left(-3\right) \times \left(-3\right) = 9" />
+
+<Claim display tex="\left(-2\right)^{3} = \left(-2\right) \times \left(-2\right) \times \left(-2\right) = -8" />
+
+The brackets matter. Without them, a power applies only to the number it is attached to, and the minus sign in front is applied afterwards:
+
+<Claim display tex="-3^{2} = -\left(3 \times 3\right) = -9" />
+
+<Misconception id="minus-sign-and-powers" />
+
+</Section>
+
+</Explanation>
+
+<WorkedExamples>
+
+<WorkedExample id="oo-multiply-first" title="Multiplication before addition" />
+
+<WorkedExample id="oo-wrong" title="Where the line is read from left to right" />
+
+<WorkedExample id="oo-power" title="A power as repeated multiplication" />
+
+<WorkedExample id="oo-brackets-powers" title="Finish this one" />
+
+<WorkedExample id="oo-negative-power" title="A minus sign and a power, on your own" />
+
+</WorkedExamples>
+
+<Practice />
+
+<Takeaways>
+
+- A power is repeated multiplication: $a^{n}$ means n copies of a multiplied together. The base is a, the exponent is n.
+- The exponent is not a multiplier: $3^{2}$ is $3 \times 3$, not $3 \times 2$.
+- Order of operations: brackets, then powers, then multiplication and division from left to right, then addition and subtraction from left to right.
+- Multiplication and division have equal rank, and so do addition and subtraction. Within a rank, work from left to right.
+- A negative base needs brackets: $\left(-3\right)^{2}$ is positive, while $-3^{2}$ is the negative of $3^{2}$.
+
+</Takeaways>
+
+<NextUp />
+
+<CheckYourself />
