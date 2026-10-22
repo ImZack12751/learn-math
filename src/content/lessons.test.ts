@@ -6,10 +6,11 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import katex from 'katex';
 import { describe, expect, it } from 'vitest';
-import { variablesOf, type Node } from '../engine/ast';
+import { variablesOf, type Node, type RelOp } from '../engine/ast';
 import { parseLatex } from '../engine/ce-adapter';
 import { check } from '../engine/check';
 import { sameExpression, sameNumber } from '../engine/equivalence';
+import { exact } from '../engine/evaluate';
 import type { AnswerSpec } from '../engine/types';
 import { fromParams } from '../generators/harness';
 import { examplesForTopic, generatorsForTopic, getGenerator } from '../generators/registry';
@@ -59,25 +60,39 @@ function prerequisiteClosure(topic: Topic): Set<string> {
   return seen;
 }
 
-/** a = b = c as [a, b, c]; null if any relation is not "=". */
-function equalityChain(node: Node): Node[] | null {
-  if (node.k !== 'rel') return [node];
-  if (node.op !== '=') return null;
-  const left = equalityChain(node.left);
-  const right = equalityChain(node.right);
-  return left && right ? [...left, ...right] : null;
+/** a = b < c as sides [a, b, c] and relations ['=', '<']; null for anything else. */
+function relationChain(node: Node): { sides: Node[]; ops: RelOp[] } | null {
+  if (node.k !== 'rel') return { sides: [node], ops: [] };
+  const left = relationChain(node.left);
+  const right = relationChain(node.right);
+  if (!left || !right) return null;
+  return { sides: [...left.sides, ...right.sides], ops: [...left.ops, node.op, ...right.ops] };
 }
 
-/** True if every side of the claim has the same value (letters stand for positive numbers). */
+const HOLDS: Partial<Record<RelOp, (a: number, b: number) => boolean>> = {
+  '<': (a, b) => a < b,
+  '<=': (a, b) => a <= b,
+  '>': (a, b) => a > b,
+  '>=': (a, b) => a >= b,
+};
+
+/**
+ * True if every relation in the claim holds. Equalities may contain letters (checked as
+ * identities for positive values); inequalities compare numbers exactly.
+ */
 function claimHolds(tex: string): boolean {
-  const chain = equalityChain(parseLatex(tex));
-  if (!chain || chain.length < 2) return false;
-  const vars = new Set(chain.flatMap((n) => [...variablesOf(n)]));
+  const chain = relationChain(parseLatex(tex));
+  if (!chain || chain.sides.length < 2) return false;
+  const vars = new Set(chain.sides.flatMap((n) => [...variablesOf(n)]));
   const domain = { ranges: Object.fromEntries([...vars].map((v) => [v, [0.2, 6] as const])) };
-  return chain.every((side, i) => {
-    const next = chain[i + 1];
-    if (!next) return true;
-    return vars.size === 0 ? sameNumber(side, next) : sameExpression(side, next, domain);
+  return chain.ops.every((op, i) => {
+    const [a, b] = [chain.sides[i] as Node, chain.sides[i + 1] as Node];
+    if (op === '=') return vars.size === 0 ? sameNumber(a, b) : sameExpression(a, b, domain);
+    const holds = HOLDS[op];
+    const [ea, eb] = [exact(a), exact(b)];
+    return vars.size === 0 && holds !== undefined && ea !== null && eb !== null
+      ? holds(ea.cmp(eb), 0)
+      : false;
   });
 }
 

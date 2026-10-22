@@ -1,3 +1,5 @@
+import { FractionBar } from '../diagrams/FractionBar';
+import { NumberLine, NumberLineExplorer } from '../diagrams/NumberLine';
 import { PowerLadder } from '../diagrams/PowerLadder';
 import { Tex } from '../math/Tex';
 import {
@@ -36,4 +38,7 @@ export const mdxComponents = {
   NextUp,
   CheckYourself,
   PowerLadder,
+  NumberLine,
+  NumberLineExplorer,
+  FractionBar,
 };
