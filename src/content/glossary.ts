@@ -150,6 +150,20 @@ export const glossary = {
     example: '2\\frac{3}{4} = 2 + \\frac{3}{4}',
     firstTaughtIn: 's1-mixed-numbers',
   },
+  'place-value': {
+    term: 'place value',
+    definition:
+      'The value of a digit from its position. Each column is worth ten times the column to its right: thousands, hundreds, tens, ones, then tenths, hundredths, thousandths.',
+    example: '\\text{in } 3.25 \\text{ the } 2 \\text{ means two tenths}',
+    firstTaughtIn: 's1-decimals',
+  },
+  decimal: {
+    term: 'decimal',
+    definition:
+      'A number written with a decimal point. Digits after the point count tenths, hundredths, thousandths and so on.',
+    example: '0.375 = \\frac{375}{1000}',
+    firstTaughtIn: 's1-decimals',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

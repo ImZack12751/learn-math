@@ -223,7 +223,7 @@ function buildCompare(p: CompareParams): BuiltProblem {
     const scaled = (n: number, d: number) => {
       const k = common / d;
       return k === 1
-        ? { math: `${frac(n, d)}`, value: n }
+        ? { math: frac(n, d), value: n }
         : { math: `${frac(n, d)} = ${frac(n * k, common)}`, value: n * k };
     };
     const sa = scaled(an, ad);
