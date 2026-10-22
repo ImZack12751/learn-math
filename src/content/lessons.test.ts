@@ -11,6 +11,7 @@ import { parseLatex } from '../engine/ce-adapter';
 import { check } from '../engine/check';
 import { sameExpression, sameNumber } from '../engine/equivalence';
 import { exact } from '../engine/evaluate';
+import type { Q } from '../engine/rational';
 import type { AnswerSpec } from '../engine/types';
 import { fromParams } from '../generators/harness';
 import { examplesForTopic, generatorsForTopic, getGenerator } from '../generators/registry';
@@ -81,6 +82,7 @@ const HOLDS: Partial<Record<RelOp, (a: number, b: number) => boolean>> = {
  * identities for positive values); inequalities compare numbers exactly.
  */
 function claimHolds(tex: string): boolean {
+  if (tex.includes(':')) return ratiosEqual(tex);
   const chain = relationChain(parseLatex(tex));
   if (!chain || chain.sides.length < 2) return false;
   const vars = new Set(chain.sides.flatMap((n) => [...variablesOf(n)]));
@@ -94,6 +96,22 @@ function claimHolds(tex: string): boolean {
       ? holds(ea.cmp(eb), 0)
       : false;
   });
+}
+
+/**
+ * A chain of equal ratios, a : b = c : d. Colons bind more loosely than the equals sign when
+ * parsed, so the chain is split first; the ratios must be proportional, part by part.
+ */
+function ratiosEqual(tex: string): boolean {
+  const sides = tex.split('=').map((side) => parseLatex(side));
+  const parts = sides.map((n) => (n.k === 'ratio' ? n.parts.map(exact) : null));
+  if (sides.length < 2 || parts.some((p) => p === null || p.some((q) => q === null))) return false;
+  const [first, ...rest] = parts as Q[][];
+  return rest.every(
+    (other) =>
+      other.length === first?.length &&
+      other.every((q, i) => q.mul(first[0] as Q).eq((first[i] as Q).mul(other[0] as Q))),
+  );
 }
 
 /** Prose with maths and tags removed: what the learner reads as plain text. */

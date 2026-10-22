@@ -202,6 +202,7 @@ describe('ratios', () => {
       ['\\frac{2}{3}', 'incorrect'],
       ['2 : 3 : 1', 'incorrect'],
       ['0 : 0', 'incorrect'],
+      ['4 : 6 = 2 : 3', 'incorrect'],
     ]);
     expectVerdict(ratio('3 : 1 : 5', ['simplest-ratio']), [
       ['3 : 1 : 5', 'correct'],

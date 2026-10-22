@@ -304,7 +304,10 @@ function sameTupleSets(a: Node[][], b: Node[][]): boolean {
 
 function ratioParts(node: Node): Node[] {
   if (node.k !== 'ratio') throw new ShapeError('Write the ratio with colons, for example 2 : 3.');
-  if (!node.parts.every(isConstant))
+  const numeric = (n: Node) =>
+    isConstant(n) &&
+    !some(n, (c) => ['rel', 'list', 'or', 'ratio', 'pm', 'text', 'empty'].includes(c.k));
+  if (!node.parts.every(numeric))
     throw new ShapeError('Each part of the ratio should be a number.');
   if (node.parts.some((p) => !(value(p) > 0)))
     throw new ShapeError('Each part of the ratio should be a positive number.');

@@ -176,6 +176,19 @@ export const glossary = {
       'The single number you multiply by to make a percentage change. An increase of 15% has multiplier 1.15; a decrease of 15% has multiplier 0.85.',
     firstTaughtIn: 's1-percentages',
   },
+  ratio: {
+    term: 'ratio',
+    definition:
+      'A comparison of two or more amounts of the same kind, written with colons. The ratio 2 : 3 means that for every 2 of the first there are 3 of the second.',
+    example: '12 : 18 = 2 : 3',
+    firstTaughtIn: 's1-ratio-proportion',
+  },
+  'direct-proportion': {
+    term: 'direct proportion',
+    definition:
+      'Two quantities are in direct proportion when multiplying one by a number multiplies the other by the same number. Twice as many items cost twice as much.',
+    firstTaughtIn: 's1-ratio-proportion',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',

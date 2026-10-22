@@ -206,6 +206,27 @@ export const misconceptions = {
     topic: 's1-percentages',
     section: 'reverse-percentages',
   },
+  'ratio-order-reversed': {
+    name: 'Writing the parts of a ratio in the wrong order',
+    faultyRule: '\\text{boys} : \\text{girls} = 2 : 3 \\text{ written as } 3 : 2',
+    why: 'The order of a ratio matches the order of the things being compared. Swapping the parts describes a different situation.',
+    topic: 's1-ratio-proportion',
+    section: 'what-a-ratio-is',
+  },
+  'share-divide-by-part': {
+    name: 'Dividing the amount by one number in the ratio',
+    faultyRule: '\\pounds 60 \\text{ in the ratio } 2 : 3 \\Rightarrow 60 \\div 3',
+    why: 'The ratio 2 : 3 splits the amount into 2 + 3 = 5 equal parts. Divide by the total number of parts to find one part.',
+    topic: 's1-ratio-proportion',
+    section: 'sharing-in-a-ratio',
+  },
+  'proportion-add-difference': {
+    name: 'Adding the difference instead of scaling',
+    faultyRule: '5 \\text{ cost } 3.40 \\Rightarrow 8 \\text{ cost } 3.40 + 3',
+    why: 'In direct proportion, quantities are multiplied by the same number, not increased by the same amount. Find the cost of one, then multiply.',
+    topic: 's1-ratio-proportion',
+    section: 'direct-proportion',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
