@@ -122,6 +122,27 @@ export const misconceptions = {
     topic: 's1-add-subtract-fractions',
     section: 'common-denominators',
   },
+  'multiply-top-and-bottom-by-whole': {
+    name: 'Multiplying both the top and the bottom by a whole number',
+    faultyRule: '3 \\times \\frac{2}{5} = \\frac{3 \\times 2}{3 \\times 5}',
+    why: 'Multiplying the top and the bottom by the same number gives an equivalent fraction, so the value does not change at all. Three lots of two fifths is six fifths.',
+    topic: 's1-multiply-divide-fractions',
+    section: 'multiplying',
+  },
+  'divide-without-flipping': {
+    name: 'Multiplying instead of dividing',
+    faultyRule: '\\frac{a}{b} \\div \\frac{c}{d} = \\frac{a}{b} \\times \\frac{c}{d}',
+    why: 'Dividing by a fraction is multiplying by its reciprocal. The second fraction must be turned upside down first.',
+    topic: 's1-multiply-divide-fractions',
+    section: 'dividing',
+  },
+  'flip-first-fraction': {
+    name: 'Turning the wrong fraction upside down',
+    faultyRule: '\\frac{a}{b} \\div \\frac{c}{d} = \\frac{b}{a} \\times \\frac{c}{d}',
+    why: 'Only the number you are dividing by is replaced by its reciprocal. The first fraction is the amount being shared out, and it stays as it is.',
+    topic: 's1-multiply-divide-fractions',
+    section: 'dividing',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
