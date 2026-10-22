@@ -17,12 +17,40 @@ export interface Misconception {
 }
 
 export const misconceptions = {
+  'negative-size-ordering': {
+    name: 'Ordering negative numbers by their size',
+    faultyRule: '-7 > -3',
+    why: 'Further left on the number line means smaller. A negative number with a bigger size is further left, so it is smaller.',
+    topic: 's1-integers-number-line',
+    section: 'ordering',
+  },
+  'distance-subtract-sizes': {
+    name: 'Subtracting the sizes when the numbers are on opposite sides of zero',
+    faultyRule: '\\text{from } -4 \\text{ to } 3 \\text{ is } 4 - 3 = 1 \\text{ step}',
+    why: 'Going from a negative number to a positive one passes through zero: count up to zero, then on from zero, and add the two parts.',
+    topic: 's1-integers-number-line',
+    section: 'distance',
+  },
+  'move-wrong-direction': {
+    name: 'Moving the wrong way along the number line',
+    faultyRule: '\\text{moving right from } -2 \\text{ by } 5 \\text{ gives } -7',
+    why: 'Right is always towards bigger numbers and left towards smaller ones, whichever side of zero you start on.',
+    topic: 's1-integers-number-line',
+    section: 'moving',
+  },
   'subtract-negative-as-negative': {
     name: 'Subtracting a negative as if it were a negative',
     faultyRule: 'a - (-b) = a - b',
     why: 'Taking away a debt leaves you better off: subtracting a negative number adds its size.',
     topic: 's1-negative-operations',
     section: 'subtracting-negatives',
+  },
+  'negative-times-negative-negative': {
+    name: 'Thinking two negatives multiply to give a negative',
+    faultyRule: '\\left(-a\\right) \\times \\left(-b\\right) = -ab',
+    why: 'Multiplying by a negative reverses the direction on the number line. Reversing twice brings you back to the positive side.',
+    topic: 's1-negative-operations',
+    section: 'multiplying-negatives',
   },
   'add-numerators-and-denominators': {
     name: 'Adding the tops and the bottoms of fractions',

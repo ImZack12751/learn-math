@@ -14,6 +14,50 @@ export interface GlossaryEntry {
 }
 
 export const glossary = {
+  integer: {
+    term: 'integer',
+    definition:
+      'A whole number that may be positive, negative or zero, such as 4, 0 or −7. Integers have no fraction or decimal part.',
+    example: '\\ldots, -2, -1, 0, 1, 2, \\ldots',
+    firstTaughtIn: 's1-integers-number-line',
+  },
+  'number-line': {
+    term: 'number line',
+    definition:
+      'A straight line with numbers marked at equal steps. Numbers increase to the right and decrease to the left, with zero in between.',
+    firstTaughtIn: 's1-integers-number-line',
+  },
+  'negative-number': {
+    term: 'negative number',
+    definition:
+      'A number less than zero, written with a minus sign in front, such as −3. On the number line it sits to the left of zero.',
+    example: '-3 < 0',
+    firstTaughtIn: 's1-integers-number-line',
+  },
+  sum: {
+    term: 'sum',
+    definition: 'The result of adding numbers together.',
+    example: '\\text{the sum of } 3 \\text{ and } 4 \\text{ is } 7',
+    firstTaughtIn: 's1-negative-operations',
+  },
+  difference: {
+    term: 'difference',
+    definition: 'The result of subtracting one number from another.',
+    example: '\\text{the difference of } 9 \\text{ and } 4 \\text{ is } 5',
+    firstTaughtIn: 's1-negative-operations',
+  },
+  product: {
+    term: 'product',
+    definition: 'The result of multiplying numbers together.',
+    example: '\\text{the product of } 3 \\text{ and } 4 \\text{ is } 12',
+    firstTaughtIn: 's1-negative-operations',
+  },
+  quotient: {
+    term: 'quotient',
+    definition: 'The result of dividing one number by another.',
+    example: '\\text{the quotient of } 12 \\text{ and } 4 \\text{ is } 3',
+    firstTaughtIn: 's1-negative-operations',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',
@@ -37,20 +81,20 @@ export const glossary = {
     term: 'base',
     definition: 'In a power, the number being multiplied by itself.',
     example: '\\text{in } 2^{5} \\text{ the base is } 2',
-    firstTaughtIn: 's2-exponent-laws',
+    firstTaughtIn: 's1-order-of-operations',
   },
   exponent: {
     term: 'exponent',
     definition:
       'The small raised number in a power. A whole-number exponent says how many copies of the base are multiplied together. Also called an index or a power.',
     example: '\\text{in } 2^{5} \\text{ the exponent is } 5',
-    firstTaughtIn: 's2-exponent-laws',
+    firstTaughtIn: 's1-order-of-operations',
   },
   power: {
     term: 'power',
     definition: 'A base with an exponent, such as 2 to the power 5, or the value it stands for.',
     example: '2^{5} = 32',
-    firstTaughtIn: 's2-exponent-laws',
+    firstTaughtIn: 's1-order-of-operations',
   },
   'square-root': {
     term: 'square root',

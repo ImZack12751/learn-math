@@ -1,0 +1,123 @@
+<WhyItMatters>
+
+Every calculation in this course takes place somewhere on the number line. Temperatures below freezing, bank balances in debt, heights below sea level and changes that go down rather than up are all described with negative numbers.
+
+This topic sets out where each whole number lives, how to tell which of two numbers is bigger, and how to count the distance between them. The next topic, on calculating with negative numbers, is built directly on these pictures.
+
+</WhyItMatters>
+
+<Explanation>
+
+<Section id="the-number-line" title="The number line">
+
+Start with the counting numbers 1, 2, 3 and so on. Mark them at equal steps along a straight line, with 0 one step to the left of 1. Moving one step to the right always adds one.
+
+Now keep going to the left of zero. Each step to the left takes away one, so the points to the left of zero are less than nothing. We call them <Term id="negative-number">negative numbers</Term> and write them with a minus sign: one step left of zero is $-1$, two steps left is $-2$, and so on.
+
+The result is the <Term id="number-line" />:
+
+<NumberLine from={-6} to={6} />
+
+The whole numbers on it, positive, negative and zero, are called <Term id="integer">integers</Term>. Zero is neither positive nor negative.
+
+<Callout kind="idea">
+
+A negative number has two parts. Its **sign** (the minus) says which side of zero it is on. Its **size** (the digits) says how many steps it is from zero. The number $-5$ is 5 steps from zero, on the left.
+
+</Callout>
+
+</Section>
+
+<Section id="ordering" title="Which number is bigger?">
+
+On the number line, numbers always increase from left to right. So of any two numbers, the one further to the right is the bigger one. The symbol $<$ means "is less than" and $>$ means "is greater than". The narrow end points at the smaller number.
+
+<Claim display tex="-1 < 4" />
+
+Every negative number is less than zero, and every positive number is greater than zero.
+
+The case that needs care is two negative numbers. Look at $-7$ and $-3$:
+
+<NumberLine from={-9} to={1} points={[-7, -3]} />
+
+The number $-7$ is further left, so it is smaller, even though 7 is bigger than 3:
+
+<Claim display tex="-7 < -3" />
+
+A debt of 7 pounds leaves you worse off than a debt of 3 pounds. The bigger the size of a negative number, the smaller the number.
+
+<Misconception id="negative-size-ordering" />
+
+To put a list of integers in order, place them on the line in your head, then read them from left to right:
+
+<Claim display tex="-9 < -2 < 0 < 4 < 7" />
+
+</Section>
+
+<Section id="distance" title="How far apart are two numbers?">
+
+The distance between two numbers on the number line is the number of unit steps from one to the other. Distances are never negative: they count steps.
+
+When both numbers are on the same side of zero, subtract the smaller size from the larger. From $-8$ to $-3$ is 5 steps, because
+
+<Claim display tex="8 - 3 = 5" />
+
+When the numbers are on opposite sides of zero, the path passes through zero. Count to zero first, then on from zero, and add. From $-4$ to $3$:
+
+<NumberLine from={-6} to={6} points={[-4, 3]} jumps={[[-4, 0], [0, 3]]} />
+
+<Claim display tex="4 + 3 = 7" />
+
+This is how a change in temperature from below freezing to above it is worked out.
+
+<Misconception id="distance-subtract-sizes" />
+
+</Section>
+
+<Section id="moving" title="Moving along the line">
+
+Moving to the right makes a number bigger, and moving to the left makes it smaller. This is true on both sides of zero. Try a few starting points and moves:
+
+<NumberLineExplorer />
+
+If a move crosses zero, split it into two parts. Starting at 2 and moving 6 to the left, the first 2 steps reach zero, and the remaining 4 steps carry on to the left:
+
+<Claim display tex="6 = 2 + 4" />
+
+So the move finishes at $-4$.
+
+<Misconception id="move-wrong-direction" />
+
+</Section>
+
+</Explanation>
+
+<WorkedExamples>
+
+<WorkedExample id="int-compare" title="Comparing two negative numbers" />
+
+<WorkedExample id="int-compare-wrong" title="Where the minus signs are ignored" />
+
+<WorkedExample id="int-order" title="Finish this one" />
+
+<WorkedExample id="int-distance" title="A distance across zero" />
+
+<WorkedExample id="int-temperature" title="A temperature change, on your own" />
+
+</WorkedExamples>
+
+<Practice />
+
+<Takeaways>
+
+- Integers are the whole numbers: positive, negative and zero. Negative numbers sit to the left of zero.
+- On the number line, numbers increase from left to right. The number further right is the greater one.
+- Of two negative numbers, the one with the bigger size is the smaller number: <Claim tex="-7 < -3" />.
+- Distance on the number line counts steps and is never negative. Across zero, count to zero and then on from zero, and add the parts.
+- Moving right makes a number bigger; moving left makes it smaller, on either side of zero.
+
+</Takeaways>
+
+<NextUp />
+
+<CheckYourself />
