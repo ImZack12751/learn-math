@@ -52,6 +52,20 @@ export const misconceptions = {
     topic: 's1-negative-operations',
     section: 'multiplying-negatives',
   },
+  'hcf-lcm-confused': {
+    name: 'Mixing up the highest common factor and the lowest common multiple',
+    faultyRule: '\\text{HCF of } 6 \\text{ and } 8 = 24',
+    why: 'A factor divides into a number, so a common factor is never bigger than the numbers. A multiple is the number times something, so a common multiple is never smaller than them.',
+    topic: 's1-factors-multiples-primes',
+    section: 'hcf-and-lcm',
+  },
+  'lcm-as-product': {
+    name: 'Multiplying the two numbers to get the lowest common multiple',
+    faultyRule: '\\text{LCM of } 6 \\text{ and } 8 = 6 \\times 8',
+    why: 'The product is always a common multiple, but when the numbers share a factor there is a smaller one. Shared primes are only counted once.',
+    topic: 's1-factors-multiples-primes',
+    section: 'hcf-and-lcm',
+  },
   'add-numerators-and-denominators': {
     name: 'Adding the tops and the bottoms of fractions',
     faultyRule: '\\frac{a}{b} + \\frac{c}{d} = \\frac{a + c}{b + d}',

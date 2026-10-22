@@ -65,6 +65,44 @@ export const glossary = {
     example: '2 + 3 \\times 4 = 2 + 12 = 14',
     firstTaughtIn: 's1-order-of-operations',
   },
+  factor: {
+    term: 'factor',
+    definition:
+      'A whole number that divides into another exactly, with no remainder. The factors of 12 are 1, 2, 3, 4, 6 and 12.',
+    example: '12 = 3 \\times 4',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
+  multiple: {
+    term: 'multiple',
+    definition:
+      'The result of multiplying a number by a whole number. The multiples of 4 are 4, 8, 12, 16 and so on.',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
+  'prime-number': {
+    term: 'prime number',
+    definition:
+      'A whole number greater than 1 whose only factors are 1 and itself. The first few are 2, 3, 5, 7, 11 and 13. The number 1 is not prime.',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
+  'prime-factorisation': {
+    term: 'prime factorisation',
+    definition:
+      'A number written as a product of prime numbers. Every whole number greater than 1 has exactly one, apart from the order of the factors.',
+    example: '72 = 2^{3} \\times 3^{2}',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
+  hcf: {
+    term: 'highest common factor (HCF)',
+    definition: 'The largest whole number that is a factor of each of the given numbers.',
+    example: '\\text{HCF of } 12 \\text{ and } 18 \\text{ is } 6',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
+  lcm: {
+    term: 'lowest common multiple (LCM)',
+    definition: 'The smallest whole number that is a multiple of each of the given numbers.',
+    example: '\\text{LCM of } 6 \\text{ and } 8 \\text{ is } 24',
+    firstTaughtIn: 's1-factors-multiples-primes',
+  },
   numerator: {
     term: 'numerator',
     definition: 'The top number of a fraction: how many of the equal pieces you have.',
