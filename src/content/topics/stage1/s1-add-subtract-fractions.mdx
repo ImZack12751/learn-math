@@ -1,0 +1,99 @@
+<WhyItMatters>
+
+Adding fractions comes up whenever parts are combined: a quarter of an hour and a third of an hour, half a recipe plus a little more. Later it becomes the method for adding algebraic fractions, and for combining terms in many formulas.
+
+The whole method rests on one idea: you can only add or subtract pieces that are the same size.
+
+</WhyItMatters>
+
+<Explanation>
+
+<Section id="same-denominators" title="Pieces of the same size">
+
+When two fractions have the same denominator, their pieces are the same size. Two ninths and four ninths are 2 pieces and 4 pieces of the same size, which makes 6 pieces:
+
+<Claim display tex="\frac{2}{9} + \frac{4}{9} = \frac{2 + 4}{9} = \frac{6}{9}" />
+
+The denominator stays the same, because the size of the pieces has not changed. Only the number of pieces, the numerator, is added. Then simplify, as in <Prereq id="s1-simplifying-fractions" />:
+
+<Claim display tex="\frac{6}{9} = \frac{2}{3}" />
+
+Subtracting works the same way: take pieces away and keep their size.
+
+<Claim display tex="\frac{7}{8} - \frac{3}{8} = \frac{4}{8} = \frac{1}{2}" />
+
+</Section>
+
+<Section id="common-denominators" title="Making the pieces the same size">
+
+A quarter and a sixth are pieces of different sizes, so their numerators cannot simply be added. Cut both into smaller, equal pieces first. Twelfths work, because 12 is a multiple of both 4 and 6:
+
+<FractionBar bars={[[1, 4], [3, 12], [1, 6], [2, 12]]} />
+
+<Claim display tex="\frac{1}{4} = \frac{3}{12}" />
+
+<Claim display tex="\frac{1}{6} = \frac{2}{12}" />
+
+Now the pieces match, so add the numerators:
+
+<Claim display tex="\frac{1}{4} + \frac{1}{6} = \frac{3}{12} + \frac{2}{12} = \frac{5}{12}" />
+
+The best <Term id="common-denominator" /> to use is the <Term id="lcm" /> of the two denominators. Any common multiple gives the right answer, but the lowest one keeps the numbers small and means less simplifying at the end.
+
+<Callout kind="idea">
+
+To add or subtract fractions: rewrite them with a common denominator, add or subtract the numerators, keep the denominator, then simplify.
+
+$$
+\frac{a}{b} + \frac{c}{b} = \frac{a + c}{b}
+$$
+
+</Callout>
+
+<Misconception id="add-numerators-and-denominators" />
+
+You can check that rule is wrong with numbers you know. Half plus half is one whole, but adding tops and bottoms gives two quarters, which is only a half:
+
+<Claim display tex="\frac{1}{2} + \frac{1}{2} = 1" />
+
+<Claim display tex="\frac{1 + 1}{2 + 2} = \frac{1}{2}" />
+
+<Misconception id="change-denominator-only" />
+
+A subtraction with different denominators, using sixths:
+
+<Claim display tex="\frac{5}{6} - \frac{1}{3} = \frac{5}{6} - \frac{2}{6} = \frac{3}{6} = \frac{1}{2}" />
+
+</Section>
+
+</Explanation>
+
+<WorkedExamples>
+
+<WorkedExample id="asf-same" title="The same denominator" />
+
+<WorkedExample id="asf-different" title="Different denominators" />
+
+<WorkedExample id="asf-wrong" title="Where the tops and the bottoms are added" />
+
+<WorkedExample id="asf-subtract" title="Finish this one" />
+
+<WorkedExample id="asf-own" title="A subtraction, on your own" />
+
+</WorkedExamples>
+
+<Practice />
+
+<Takeaways>
+
+- Only pieces of the same size can be added or subtracted, so the denominators must match first.
+- With the same denominator, add or subtract the numerators and keep the denominator.
+- With different denominators, rewrite both fractions using the LCM of the denominators, multiplying each top by the same number as its bottom.
+- Never add the denominators: $\frac{a}{b} + \frac{c}{d}$ is not $\frac{a + c}{b + d}$.
+- Simplify the answer at the end.
+
+</Takeaways>
+
+<NextUp />
+
+<CheckYourself />

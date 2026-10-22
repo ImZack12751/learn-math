@@ -115,6 +115,13 @@ export const misconceptions = {
     topic: 's1-order-of-operations',
     section: 'the-order',
   },
+  'change-denominator-only': {
+    name: 'Changing the denominator without changing the numerator',
+    faultyRule: '\\frac{1}{4} + \\frac{1}{6} = \\frac{1}{12} + \\frac{1}{12}',
+    why: 'Making the pieces smaller means you need more of them. Whatever the denominator is multiplied by, the numerator must be multiplied by too.',
+    topic: 's1-add-subtract-fractions',
+    section: 'common-denominators',
+  },
   'multiply-base-by-exponent': {
     name: 'Multiplying the base by the exponent',
     faultyRule: 'a^{n} = a \\times n',
